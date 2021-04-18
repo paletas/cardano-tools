@@ -1,0 +1,125 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script data-ad-client="ca-pub-7199897902029134" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Silvestre's Cardano Tools @ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/css/layout.css" />
+    <meta name="keywords" content="silvestre" />
+</head>
+<body>
+    <nav class="bg-gray-800" x-data="epochViewer()" x-init="initFetchEpoch()">
+        <div class="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <img class="h-8 w-8" src="https://tailwindui.com/img/logos/workflow-mark-indigo-500.svg" alt="Workflow">
+                    </div>
+                    <div class="hidden lg:block">
+                        <div class="ml-10 flex items-baseline space-x-4">
+                            <a href="/" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Home</a>
+                            <a href="/pools" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Stake Pools</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="-mr-2 flex lg:hidden">
+                    <!-- Mobile menu button -->
+                    <button class="navbar-burger bg-gray-800 inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
+                        <span class="sr-only">Open main menu</span>
+                        <!--
+                        Heroicon name: menu
+
+                        Menu open: "hidden", Menu closed: "block"
+                        -->
+                        <svg id="main-nav-button-closed" class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                        <!--
+                        Heroicon name: x
+
+                        Menu open: "block", Menu closed: "hidden"
+                        -->
+                        <svg id="main-nav-button-open" class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!--
+        Mobile menu, toggle classes based on menu state.
+
+        Open: "block", closed: "hidden"
+        -->
+        <div id="main-nav" class="hidden lg:hidden flex flex-row divide-x divide-white">
+            <div class="flex-auto px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
+                <a href="/" class="bg-gray-900 text-white block px-3 py-2 rounded-md text-base font-medium">Home</a>
+                <a href="/pools" class="bg-gray-900 text-white block px-3 py-2 rounded-md text-base font-medium">Stake Pools</a>
+            </div>
+
+            <template x-if="initialized">
+                <div class="flex-shrink relative px-2 pt-2 pb-3 sm:px-3 w-40">
+                    <svg class="max-h-full max-w-full" viewBox="0 0 33.83098862 33.83098862" xmlns="http://www.w3.org/2000/svg">
+                        <circle stroke="#efefef" stroke-width="2" fill="none" cx="16.91549431" cy="16.91549431" r="15.91549431" />
+                        <circle stroke="#00acc1" stroke-width="2" :stroke-dasharray="`${epoch.slotNumber / epoch.maximumSlots * 100},100`" stroke-linecap="round" fill="none" cx="16.91549431" cy="16.91549431" r="15.91549431" transform="rotate(-90 16.91549431 16.91549431)" />
+                    </svg>
+
+                    <div class="absolute inset-y-6 w-36 h-36">
+                        <div class="text-white text-xs text-center font-semibold">Epoch</div>
+                        <div alt="Epoch number" class="text-white text-4xl text-center font-bold" x-text="epoch.number">256</div>
+                        <div alt="Block count" class="mt-5 text-white text-lg text-center font-bold" x-text="epoch.blockCount">1000</div>
+                    </div>
+                    <div class="mx-auto mt-2 text-center text-white text-sm">
+                        <div alt="Epoch slots" x-text="`${epoch.slotNumber} / ${epoch.maximumSlots}`">432000 / 432000</div>
+                        <div alt="Epoch end date" x-text="moment(epoch.endDate).local().format('MMMM DD [at] HH:mm')">February 31st at 22:25</div>
+                    </div>
+                </div>
+            </template>
+        </div>
+
+        <template x-if="initialized">
+            <div class="absolute top-0 right-0 mr-10 bg-gray-800 rounded-b-md p-3 z-20 hidden lg:block">
+                <svg class="w-36 h-36" viewBox="0 0 33.83098862 33.83098862" xmlns="http://www.w3.org/2000/svg">
+                    <circle stroke="#efefef" stroke-width="2" fill="none" cx="16.91549431" cy="16.91549431" r="15.91549431" />
+                    <circle stroke="#00acc1" stroke-width="2" :stroke-dasharray="`${epoch.slotNumber / epoch.maximumSlots * 100},100`" stroke-linecap="round" fill="none" cx="16.91549431" cy="16.91549431" r="15.91549431" transform="rotate(-90 16.91549431 16.91549431)" />
+                </svg>
+
+                <div class="absolute inset-y-8 w-36 h-36">
+                    <div class="text-white text-xs text-center font-semibold">Epoch</div>
+                    <div alt="Epoch number" class="text-white text-4xl text-center font-bold" x-text="epoch.number">256</div>
+                    <div alt="Block count" class="mt-5 text-white text-lg text-center font-bold" x-text="epoch.blockCount">1000</div>
+                </div>
+                <div class="mx-auto mt-2 text-center text-white text-sm">
+                    <div alt="Epoch slots" x-text="`${epoch.slotNumber} / ${epoch.maximumSlots}`">432000 / 432000</div>
+                    <div alt="Epoch end date" x-text="moment(epoch.endDate).local().format('MMMM DD [at] HH:mm')">February 31st at 22:25</div>
+                </div>
+            </div>
+        </template>
+    </nav>
+
+    <header class="bg-white shadow">
+        <div class="max-w-screen-2xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+            <h1 class="text-2xl font-bold leading-tight text-gray-900">@ViewData["Subtitle"]</h1>
+        </div>
+    </header>
+    <main>
+        <div class="max-w-screen-2xl mx-auto py-6 sm:px-6 lg:px-8">
+            @RenderBody()
+        </div>
+    </main>
+    <footer class="bg-white border-2 pt-2 fixed bottom-0 left-0">
+        <CultureSelector />
+    </footer>
+
+    <script src="~/lib/alpinejs/alpine.js" asp-append-version="true"></script>
+    <script src="~/lib/moment.js/moment.js" asp-append-version="true"></script>
+    <script src="~/lib/microsoft-signalr/signalr.js" asp-append-version="true"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/epochViewer.js" asp-append-version="true"></script>
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

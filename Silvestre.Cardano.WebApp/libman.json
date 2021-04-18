@@ -1,0 +1,22 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "library": "alpinejs@2.8.1",
+      "destination": "wwwroot/lib/alpinejs/"
+    },
+    {
+      "library": "moment.js@2.29.1",
+      "destination": "wwwroot/lib/moment.js/"
+    },
+    {
+      "library": "microsoft-signalr@3.1.14",
+      "destination": "wwwroot/lib/microsoft-signalr/"
+    },
+    {
+      "library": "require.js@2.3.6",
+      "destination": "wwwroot/lib/require.js/"
+    }
+  ]
+}

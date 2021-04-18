@@ -1,0 +1,139 @@
+﻿@page "/pools"
+@model Silvestre.Cardano.WebApp.Pages.StakePools.IndexModel
+
+@section Scripts
+{
+<script type="text/javascript" src="~/js/pages/stakePools.js"> </script>
+}
+
+<div class="flex flex-row space-x-4">
+    <div class="flex-auto">
+        <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+            <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+                <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+                    <table class="min-w-full divide-y divide-gray-200" x-data="listStakePools()" x-init="fetchStakePools(100, 0)">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Pool
+                                </th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Pledge
+                                </th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Delegation
+                                </th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Margin
+                                </th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Fixed Cost
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <template x-if="isLoading">
+                                <tr>
+                                    <td>Loading...</td>
+                                </tr>
+                            </template>
+                            <template x-if="errors.fetching">
+                                <tr>
+                                    <td>An error has ocurred</td>
+                                </tr>
+                            </template>
+                            <template x-if="initialized" x-for="pool in stakePools" :key="pool.poolAddress">
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <div class="flex-shrink-0 h-10 w-10" x-show="false">
+                                                <img class="h-10 w-10 rounded-full" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=facearea&amp;facepad=4&amp;w=256&amp;h=256&amp;q=60" alt="">
+                                            </div>
+                                            <div class="ml-4">
+                                                <div class="text-sm font-medium text-gray-900">
+                                                    <a href="#" x-text="pool.ticker" x-bind:href="pool.website">HUSKY</a>
+                                                </div>
+                                                <div class="text-sm text-gray-500" x-text="pool.name">
+                                                    Husky Pool
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900" x-text="`₳${pool.pledge} (ADA)`">500000 ADA</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900" x-text="`₳${pool.delegation} (ADA)`">15M ADA</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        <div class="text-sm text-gray-900" x-text="`${pool.marginPercentage}%`">5.5%</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        <div class="text-sm text-gray-900" x-text="`₳${pool.maintenanceCost} (ADA)`">340 ADA</div>
+                                    </td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex-initial flex-shrink">
+        <div class="bg-gray-50 shadow overflow-hidden sm:rounded-md max-w-2x1">
+            <div class="px-4 py-5 sm:px-6">
+                <h3 class="text-lg leading-6 font-medium text-gray-900">
+                    Featured Pool
+                </h3>
+            </div>
+            <div class="border-top border-gray-200" x-data="featuredPool()" x-init="fetchStakePool($el.dataset.pooladdress)" data-pooladdress="@Model.FeaturedStakePool">
+                <template x-if="initialized">
+                    <dl>
+                        <div class="bg-gray-100 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                            <dt class="text-sm font-medium text-gray-500">
+                                Ticker
+                            </dt>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" x-show="initialized" x-text="stakePool.ticker">
+                                WILD
+                            </dd>
+                        </div>
+                        <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                            <dt class="text-sm font-medium text-gray-500">
+                                Name
+                            </dt>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" x-show="initialized" x-text="stakePool.name">
+                                Silvestre's Pool
+                            </dd>
+                        </div>
+                        <div class="bg-gray-100 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                            <dt class="text-sm font-medium text-gray-500">
+                                Pledge
+                            </dt>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" x-show="initialized" x-text="`₳${stakePool.pledge} (ADA)`">
+                                6000 (ADA)
+                            </dd>
+                        </div>
+                        <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                            <dt class="text-sm font-medium text-gray-500">
+                                Delegation
+                            </dt>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" x-show="initialized" x-text="`₳${stakePool.delegation} (ADA)`">
+                                6000 (ADA)
+                            </dd>
+                        </div>
+                        <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                            <dt class="text-sm font-medium text-gray-500">
+                                More Details
+                            </dt>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" x-show="initialized">
+                                <a x-bind:href="stakePool.website" target="_blank">Website</a>
+                            </dd>
+                        </div>
+                    </dl>
+
+                </template>
+            </div>
+        </div>
+    </div>
+</div>

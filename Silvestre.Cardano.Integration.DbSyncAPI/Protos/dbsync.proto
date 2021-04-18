@@ -1,0 +1,113 @@
+syntax = "proto3";
+
+option csharp_namespace = "Silvestre.Cardano.Integration.DbSync.Services";
+
+import "google/protobuf/timestamp.proto";
+package cardanodbsyncapi;
+
+//Services
+///Epochs
+
+service Epochs {
+  rpc GetCurrentEpoch (CurrentEpochRequest) returns (CurrentEpochReply);
+}
+
+message CurrentEpochRequest
+{
+
+}
+
+message CurrentEpochReply {
+  Epoch Epoch = 1;
+}
+
+///Blocks
+
+service Blocks {
+	rpc GetLatestBlock (LatestBlockRequest) returns (LatestBlockReply);
+
+	rpc BlockUpdates (BlockUpdatesRequest) returns (stream Block);
+}
+
+message LatestBlockRequest
+{
+	uint32 EpochNumber = 1;
+}
+
+message LatestBlockReply {
+  Block Block = 1;
+}
+
+message BlockUpdatesRequest
+{
+	uint32 DelayUpdatesMillisecond = 1;
+}
+
+/// Stake Pools
+service StakePools
+{
+	rpc ListStakePools (ListStakePoolsRequest) returns (ListStakePoolsReply);
+
+	rpc GetStakePool (GetStakePoolRequest) returns (GetStakePoolReply);
+}
+
+message ListStakePoolsRequest
+{
+	uint32 Offset = 1;
+	uint32 Limit = 2;
+}
+
+message ListStakePoolsReply
+{
+	repeated StakePool Results = 1;
+}
+
+message GetStakePoolRequest
+{
+	string PoolAddress = 1;
+}
+
+message GetStakePoolReply
+{
+	StakePool StakePool = 1;
+}
+
+//Base Types
+
+message Int128 {
+	bytes Value = 1;
+}
+
+
+message Epoch {
+   uint32 Number = 1;
+   uint32 TransactionCount = 2;
+   uint32 BlockCount = 3;
+   uint64 Fees = 4;
+   Int128 OutSum = 5;
+   google.protobuf.Timestamp StartTime = 6;
+   google.protobuf.Timestamp EndTime = 7;
+}
+
+message Block {
+	string Hash = 1;
+	uint32 BlockNumber = 2;
+	uint32 EpochNumber = 3;
+	uint32 SlotNumber = 4;
+	uint32 EpochSlotNumber = 5;
+	int64 PreviousID = 6;
+	int64 SlotLeader = 7;
+	uint32 Size = 8;
+	google.protobuf.Timestamp Timestamp = 9;
+}
+
+message StakePool {
+	string PoolAddress = 1;
+	uint64 Pledge = 2;
+	uint32 ActiveSinceEpoch = 3;
+	float Margin = 4;
+	uint64 FixedCost = 5;
+	string RewardAddress = 6;
+	string MetadataUrl = 7;
+	uint32 RetiringEpoch = 8;
+}

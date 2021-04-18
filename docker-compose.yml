@@ -1,0 +1,93 @@
+version: "3.5"
+
+services:
+    postgres:
+        image: postgres:11.5-alpine
+        environment:
+            - POSTGRES_LOGGING=true
+            - POSTGRES_DB_FILE=/run/secrets/postgres_db
+            - POSTGRES_PASSWORD_FILE=/run/secrets/postgres_password
+            - POSTGRES_USER_FILE=/run/secrets/postgres_user
+        secrets:
+            - postgres_password
+            - postgres_user
+            - postgres_db
+        volumes:
+            - postgres:/var/lib/postgresql/data
+        ports:
+            - 5432:5432
+        restart: on-failure
+        logging:
+            driver: "json-file"
+            options:
+                max-size: "200k"
+                max-file: "10"
+
+    cardano-node:
+        image: inputoutput/cardano-node:${CARDANO_NODE_VERSION-:1.25.1}
+        environment:
+            - NETWORK=${NETWORK:-mainnet}
+        volumes:
+            - node-db:/data/db
+            - node-ipc:/ipc
+        restart: on-failure
+        logging:
+            driver: "json-file"
+            options:
+                max-size: "200k"
+                max-file: "10"
+
+    cardano-db-sync:
+        image: inputoutput/cardano-db-sync:${CARDANO_DB_SYNC_VERSION-:9.0.0}
+        environment:
+            - NETWORK=${NETWORK:-mainnet}
+            - POSTGRES_HOST=postgres
+            - POSTGRES_PORT=5432
+        depends_on:
+            - cardano-node
+            - postgres
+        secrets:
+            - postgres_password
+            - postgres_user
+            - postgres_db
+        volumes:
+            - db-sync-data:/var/lib/cdbsync
+            - node-ipc:/node-ipc
+        restart: on-failure
+        logging:
+            driver: "json-file"
+            options:
+                max-size: "200k"
+                max-file: "10"
+
+    silvestre.cardano.integration.dbsyncapi:
+        image: ${DOCKER_REGISTRY-}silvestrecardanointegrationdbsyncapi
+        build:
+            context: .
+            dockerfile: Silvestre.Cardano.Integration.DbSyncAPI/Dockerfile
+        ports:
+            - 3110:80
+    silvestre.cardano.webapp:
+        image: ${DOCKER_REGISTRY-}silvestrecardanowebapp
+        build:
+            context: .
+            dockerfile: Silvestre.Cardano.WebApp/Dockerfile
+        environment:
+            - ASPNETCORE_ENVIRONMENT=Development
+        ports:
+            - 5100:80
+        depends_on: ['silvestre.cardano.integration.dbsyncapi']
+
+secrets:
+  postgres_db:
+    file: ./config/secrets/postgres_db
+  postgres_password:
+    file: ./config/secrets/postgres_password
+  postgres_user:
+    file: ./config/secrets/postgres_user
+
+volumes:
+  db-sync-data:
+  postgres:
+  node-db:
+  node-ipc:
