@@ -59,29 +59,38 @@ namespace Silvestre.Cardano.Integration.CardanoAPI
             });
         }
 
-        public async IAsyncEnumerable<CardanoStakePool> ListStakePools(uint count, uint offset = 0)
+        public async Task<(ulong Total, ulong From, IEnumerable<CardanoStakePool> StakePools)> ListStakePools(uint count, uint offset = 0, bool includeMetadata = false)
         {
-            var foundStakePools = await _dbSyncAPI.ListStakePools(offset, count);
+            var stakePoolsReply = await _dbSyncAPI.ListStakePools(offset, count);
+            var stakePools = new List<CardanoStakePool>(stakePoolsReply.StakePools.Count);
 
-            foreach (var stakePool in foundStakePools)
+            foreach (var stakePool in stakePoolsReply.StakePools)
             {
-                var metadata = await _metadataAPI.GetMetadata(new Uri(stakePool.MetadataUrl)).ConfigureAwait(false);
-
-                yield return new CardanoStakePool
+                stakePools.Add(new CardanoStakePool
                 {
-                    Ticker = metadata?.Ticker,
-                    Name = metadata?.Name,
-                    Description = metadata?.Description,
-                    Website = metadata?.Homepage,
                     MetadataUrl = new Uri(stakePool.MetadataUrl),
-
                     PoolAddress = new CardanoAddress(stakePool.PoolAddress, CardanoAddress.AddressKindEnum.StakePool),
                     Margin = new CardanoAsset((decimal)stakePool.Margin, CardanoAsset.PERCENTAGE_UNIT),
                     Maintenance = new CardanoAsset(stakePool.FixedCost, CardanoAsset.ADA_DECIMALPOINTER, CardanoAsset.ADA_UNIT),
                     Pledge = new CardanoAsset(stakePool.Pledge, CardanoAsset.ADA_DECIMALPOINTER, CardanoAsset.ADA_UNIT),
-                    RewardsAddress = new CardanoAddress(stakePool.RewardAddress, CardanoAddress.AddressKindEnum.Rewards)
-                };
+                    RewardsAddress = new CardanoAddress(stakePool.RewardAddress, CardanoAddress.AddressKindEnum.Rewards),
+                });
             }
+
+            if (includeMetadata)
+            {
+                Parallel.ForEach(stakePools, async stakePool =>
+                {
+                    var metadata = await _metadataAPI.GetMetadata(stakePool.MetadataUrl);
+
+                    stakePool.Ticker = metadata?.Ticker;
+                    stakePool.Name = metadata?.Name;
+                    stakePool.Description = metadata?.Description;
+                    stakePool.Website = metadata?.Homepage;
+                });
+            }
+
+            return (stakePoolsReply.Total, stakePoolsReply.From, stakePools);
         }
 
         public async Task<CardanoStakePool?> GetStakePool(string poolAddress)
@@ -103,6 +112,19 @@ namespace Silvestre.Cardano.Integration.CardanoAPI
                 Maintenance = new CardanoAsset(stakePool.FixedCost, CardanoAsset.ADA_DECIMALPOINTER, CardanoAsset.ADA_UNIT),
                 Pledge = new CardanoAsset(stakePool.Pledge, CardanoAsset.ADA_DECIMALPOINTER, CardanoAsset.ADA_UNIT),
                 RewardsAddress = new CardanoAddress(stakePool.RewardAddress, CardanoAddress.AddressKindEnum.Rewards)
+            };
+        }
+
+        public async Task<CardanoStakePoolMetadata> GetStakePoolMetadata(Uri metadataUrl)
+        {
+            var metadata = await _metadataAPI.GetMetadata(metadataUrl).ConfigureAwait(false);
+
+            return new CardanoStakePoolMetadata
+            {
+                Ticker = metadata?.Ticker,
+                Name = metadata?.Name,
+                Description = metadata?.Description,
+                Website = metadata?.Homepage
             };
         }
     }

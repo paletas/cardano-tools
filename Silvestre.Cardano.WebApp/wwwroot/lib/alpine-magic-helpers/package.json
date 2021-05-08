@@ -1,0 +1,107 @@
+{
+    "name": "alpine-magic-helpers",
+    "version": "1.2.1",
+    "description": "A collection of magic properties and helper functions for use with Alpine.",
+    "source": [
+        "src/index.js",
+        "src/component.js",
+        "src/fetch.js",
+        "src/interval.js",
+        "src/truncate.js",
+        "src/range.js",
+        "src/screen.js",
+        "src/scroll.js",
+        "src/undo.js"
+    ],
+    "main": "dist/index.js",
+    "scripts": {
+        "build": "rollup -c",
+        "watch": "concurrently \"rollup -c -w\" \"browser-sync examples --no-open --ss . -f examples dist/index.js\"",
+        "test": "jest",
+        "test-watch": "jest --watch",
+        "lint": "eslint .",
+        "lint-fix": "eslint . --fix"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/alpine-collective/magic-helpers.git"
+    },
+    "keywords": [
+        "alpinejs",
+        "magic properties",
+        "alpine"
+    ],
+    "authors": [
+        {
+            "name": "Kevin Batdorf",
+            "url": "https://kevinbatdorf.com"
+        },
+        {
+            "name": "Ryan Chandler",
+            "url": "https://ryangjchandler.co.uk"
+        },
+        {
+            "name": "Simone Todaro",
+            "url": "https://github.com/SimoTod"
+        },
+        {
+            "name": "Hugo DF",
+            "url": "https://codewithhugo.com"
+        }
+    ],
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/alpine-collective/magic-helpers/issues"
+    },
+    "homepage": "https://github.com/alpine-collective/magic-helpers#readme",
+    "dependencies": {},
+    "peerDependencies": {
+        "alpinejs": "^2.8"
+    },
+    "devDependencies": {
+        "@babel/preset-env": "^7.13.10",
+        "@rollup/plugin-babel": "^5.3.0",
+        "@rollup/plugin-commonjs": "^17.1.0",
+        "@rollup/plugin-json": "^4.1.0",
+        "@rollup/plugin-node-resolve": "^11.2.0",
+        "@testing-library/dom": "^7.30.0",
+        "@testing-library/jest-dom": "^5.11.9",
+        "alpinejs": "^2.7.0",
+        "axios": "^0.21",
+        "browser-sync": "^2.26.14",
+        "concurrently": "^6.0.0",
+        "deep-diff": "^1.0.2",
+        "eslint": "^7.22.0",
+        "eslint-config-standard": "^16.0.2",
+        "eslint-plugin-import": "^2.22.1",
+        "eslint-plugin-node": "^11.1.0",
+        "eslint-plugin-promise": "^4.3.1",
+        "eslint-plugin-standard": "^4.1.0",
+        "husky": "^5.1.3",
+        "jest": "^26.6.3",
+        "jsdom-simulant": "^1.1.2",
+        "lint-staged": "^10.5.4",
+        "rollup": "^2.42.1",
+        "rollup-plugin-filesize": "^9.1.1",
+        "smoothscroll-polyfill": "^0.4.4"
+    },
+    "publishConfig": {
+        "access": "public"
+    },
+    "files": [
+        "dist/*",
+        "package.json",
+        "LICENSE.md",
+        "README.md"
+    ],
+    "husky": {
+        "hooks": {
+            "pre-commit": "lint-staged"
+        }
+    },
+    "lint-staged": {
+        "*.js": [
+            "eslint --fix"
+        ]
+    }
+}

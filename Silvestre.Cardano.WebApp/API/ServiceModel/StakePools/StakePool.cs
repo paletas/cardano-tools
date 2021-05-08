@@ -1,9 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text.Json.Serialization;
 
 namespace Silvestre.Cardano.WebApp.API.ServiceModel.StakePools
 {
+    [DebuggerDisplay("{PoolAddress}")]
     public class StakePool
     {
         [JsonPropertyName("poolAddress")]
@@ -35,5 +36,8 @@ namespace Silvestre.Cardano.WebApp.API.ServiceModel.StakePools
 
         [JsonPropertyName("delegatedInADA")]
         public decimal DelegationInADA { get; internal set; }
+
+        [JsonPropertyName("metadataUrl")]
+        public Uri MetadataUrl { get; internal set; }
     }
 }

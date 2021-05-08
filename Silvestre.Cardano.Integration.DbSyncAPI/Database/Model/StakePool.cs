@@ -17,5 +17,7 @@
         public string MetadataUrl { get; set; }
 
         public uint RetiringEpoch { get; set; }
+
+        public ulong TotalStakePools { get; set; }
     }
 }

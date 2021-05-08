@@ -1,5 +1,5 @@
-﻿function listStakePools() {
-    function stakePool(servicePool) {
+﻿function listStakePools(stakePoolsPerPage) {
+    function stakePool(servicePool, fetchMetadata) {
         return {
             poolAddress: servicePool.poolAddress,
             ticker: servicePool.ticker,
@@ -8,20 +8,30 @@
             maintenanceCost: servicePool.maintenanceCostInADA,
             marginPercentage: servicePool.marginPercentage * 100,
             pledge: servicePool.pledgeInADA,
-            delegation: servicePool.delegatedInADA
+            delegation: servicePool.delegatedInADA,
+            isLoading: false,
+            initialized: false,
+            metadataUrl: servicePool.metadataUrl,
+            hasMetadataError: false
         };
     }
 
     return {
         isLoading: false,
         initialized: false,
+        currentPage: undefined,
+        quantityPerPage: stakePoolsPerPage,
         errors: {
             fetching: false
         },
         stakePools: [],
-        fetchStakePools(count, offset) {
+        totalStakePools: undefined,
+        pagination: new pagination(),
+        fetchStakePoolsPage(page) {
             this.isLoading = true;
-            fetch(`/api/v1/stakepool?count=${count}&offset=${offset}`)
+            var offset = this.quantityPerPage * (page - 1);
+
+            fetch(`/api/v1/stakepool?count=${this.quantityPerPage}&offset=${offset}`)
                 .then(result => {
                     if (result.ok) return result.json();
                     else {
@@ -30,14 +40,47 @@
                     }
                 })
                 .then(data => {
+                    this.totalStakePools = data.total;
+                    this.stakePools = data.stakePools.map(stakePool);
+                    this.currentPage = page;
+
+                    if (this.pagination.initialized)
+                        this.pagination.setMetrics(this.totalStakePools / this.quantityPerPage, this.quantityPerPage, this.totalStakePools);
+                    else
+                        this.pagination.setupPagination(this.totalStakePools / this.quantityPerPage, this.quantityPerPage, this.totalStakePools, this.fetchStakePoolsPage.bind(this));
+
+                    for (var ix = 0; ix < this.stakePools.length; ix++) {
+                        this.fetchStakePoolMetadata(this.stakePools[ix]);
+                    }
+
                     this.isLoading = false;
-
-                    this.stakePools = data.map(stakePool);
-
                     this.initialized = true;
                 });
+        },
+        fetchStakePoolMetadata(stakePool) {
+            if (stakePool.initialized === true) return;
+
+            stakePool.isLoading = true;
+
+            fetch(`/api/v1/stakepool/metadata?url=${encodeURI(stakePool.metadataUrl)}`, { redirect: 'error', mode: 'no-cors' })
+                .then(async result => {
+                    if (result.ok) {
+                        var jsonMetadata = await result.json();
+
+                        stakePool.ticker = jsonMetadata.ticker;
+                        stakePool.name = jsonMetadata.name;
+                        stakePool.website = jsonMetadata.homepage;
+
+                        stakePool.initialized = true;
+                    }
+                    else {
+                        stakePool.hasMetadataError = true;
+                    }
+
+                    stakePool.isLoading = false;
+                })
         }
-    };     
+    };
 }
 
 function featuredPool() {

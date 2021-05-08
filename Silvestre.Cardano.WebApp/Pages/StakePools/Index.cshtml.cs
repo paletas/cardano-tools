@@ -16,6 +16,7 @@ namespace Silvestre.Cardano.WebApp.Pages.StakePools
 
         public void OnGet()
         {
+            this.ViewData["Subtitle"] = "Stake Pools";
             this.FeaturedStakePool = Configuration.GetSection("Features")?["FeaturedStakePool"];
         }
     }

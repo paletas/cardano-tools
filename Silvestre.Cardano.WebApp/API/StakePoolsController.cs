@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Silvestre.Cardano.Integration.CardanoAPI;
 using Silvestre.Cardano.WebApp.API.ServiceModel.StakePools;
-using System.Collections.Generic;
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Silvestre.Cardano.WebApp.API
@@ -18,26 +19,16 @@ namespace Silvestre.Cardano.WebApp.API
         }
 
         [HttpGet]
-        public async IAsyncEnumerable<StakePool> Get([FromQuery(Name = "count")] uint count, [FromQuery(Name = "offset")] uint offset = 0)
+        public async Task<ListStakePoolsResponse> Get([FromQuery(Name = "count")] uint count, [FromQuery(Name = "offset")] uint offset = 0, [FromQuery(Name = "includeMetadata")] bool includeMetadata = false)
         {
-            var foundStakePools = this._cardanoAPI.ListStakePools(count, offset);
+            var (total, from, stakePools) = await this._cardanoAPI.ListStakePools(count, offset, includeMetadata);
 
-            await foreach (var stakePool in foundStakePools.ConfigureAwait(false))
+            return new ListStakePoolsResponse
             {
-                yield return new StakePool
-                {
-                    Ticker = stakePool.Ticker,
-                    Name = stakePool.Name,
-                    Description = stakePool.Description,
-                    Website = stakePool.Website,
-
-                    PoolAddress = stakePool.PoolAddress.Address,
-                    RewardsAddress = stakePool.RewardsAddress.Address,
-                    MarginPercentage = stakePool.Margin.Quantity,
-                    MaintenanceInADA = stakePool.Maintenance.Quantity,
-                    PledgeInADA = stakePool.Pledge.Quantity
-                };
-            }
+                Total = total,
+                From = from,
+                StakePools = stakePools.Select(CardanoStakePoolMappings.ToStakePool).ToArray()
+            };
         }
 
         [HttpGet("{address}")]
@@ -46,19 +37,15 @@ namespace Silvestre.Cardano.WebApp.API
             var stakePool = await this._cardanoAPI.GetStakePool(address).ConfigureAwait(false);
             if (stakePool == null) return null;
 
-            return new StakePool
-            {
-                Ticker = stakePool.Ticker,
-                Name = stakePool.Name,
-                Description = stakePool.Description,
-                Website = stakePool.Website,
+            return stakePool.ToStakePool();
+        }
 
-                PoolAddress = stakePool.PoolAddress.Address,
-                RewardsAddress = stakePool.RewardsAddress.Address,
-                MarginPercentage = stakePool.Margin.Quantity,
-                MaintenanceInADA = stakePool.Maintenance.Quantity,
-                PledgeInADA = stakePool.Pledge.Quantity
-            };
+        [HttpGet("metadata")]
+        public async Task<StakePoolMetadata> GetMetadata([FromQuery(Name = "url")] string metadataUrl)
+        {
+            var stakePoolMetadata = await this._cardanoAPI.GetStakePoolMetadata(new Uri(metadataUrl, UriKind.Absolute));
+
+            return stakePoolMetadata.ToStakePoolMetadata();
         }
     }
 }

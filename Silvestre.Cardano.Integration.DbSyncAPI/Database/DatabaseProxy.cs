@@ -39,7 +39,7 @@ namespace Silvestre.Cardano.Integration.DbSyncAPI
             return BlockQueries.GetLatestBlock(this.GetConnection());
         }
 
-        public Task<IEnumerable<StakePool>> ListStakePools(uint offset = 0, uint limit = 100)
+        public Task<(ulong Total, IEnumerable<StakePool> StakePools)> ListStakePools(uint offset = 0, uint limit = 100)
         {
             return StakePoolQueries.ListStakePools(this.GetConnection(), offset, limit);
         }

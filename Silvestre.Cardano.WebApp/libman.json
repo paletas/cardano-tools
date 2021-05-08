@@ -3,7 +3,7 @@
   "defaultProvider": "cdnjs",
   "libraries": [
     {
-      "library": "alpinejs@2.8.1",
+      "library": "alpinejs@2.8.2",
       "destination": "wwwroot/lib/alpinejs/"
     },
     {
@@ -17,6 +17,11 @@
     {
       "library": "require.js@2.3.6",
       "destination": "wwwroot/lib/require.js/"
+    },
+    {
+      "provider": "unpkg",
+      "library": "alpine-magic-helpers@1.2.1",
+      "destination": "wwwroot/lib/alpine-magic-helpers/"
     }
   ]
 }

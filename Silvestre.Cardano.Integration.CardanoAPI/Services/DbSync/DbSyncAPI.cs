@@ -48,10 +48,9 @@ namespace Silvestre.Cardano.Integration.CardanoAPI.Services.DbSync
             return streamingResponse.ResponseStream.ReadAllAsync(cancellationToken);
         }
 
-        public async Task<IEnumerable<StakePool>> ListStakePools(uint offset = 0, uint limit = 100)
+        public async Task<ListStakePoolsReply> ListStakePools(uint offset = 0, uint limit = 100)
         {
-            var response = await this._stakePoolsClient.ListStakePoolsAsync(new ListStakePoolsRequest { Offset = offset, Limit = limit }).ResponseAsync.ConfigureAwait(false);
-            return response.Results;
+            return await this._stakePoolsClient.ListStakePoolsAsync(new ListStakePoolsRequest { Offset = offset, Limit = limit }).ResponseAsync.ConfigureAwait(false);
         }
 
         public async Task<StakePool> GetStakePool(string poolAddress)

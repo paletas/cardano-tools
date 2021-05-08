@@ -59,7 +59,9 @@ message ListStakePoolsRequest
 
 message ListStakePoolsReply
 {
-	repeated StakePool Results = 1;
+	uint64 Total = 1;
+	uint64 From = 2;
+	repeated StakePool StakePools = 3;
 }
 
 message GetStakePoolRequest

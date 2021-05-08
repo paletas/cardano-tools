@@ -20,10 +20,10 @@ namespace Silvestre.Cardano.Integration.DbSyncAPI.Services
 
         public override async Task<ListStakePoolsReply> ListStakePools(ListStakePoolsRequest request, ServerCallContext context)
         {
-            var stakePools = await _databaseProxy.ListStakePools(request.Offset, request.Limit).ConfigureAwait(false);
+            var listStakePools = await _databaseProxy.ListStakePools(request.Offset, request.Limit).ConfigureAwait(false);
 
-            var reply = new ListStakePoolsReply();
-            reply.Results.AddRange(stakePools.Select(sp => new StakePool
+            var reply = new ListStakePoolsReply { Total = listStakePools.Total, From = request.Offset };
+            reply.StakePools.AddRange(listStakePools.StakePools.Select(sp => new StakePool
             {
                 PoolAddress = sp.PoolAddress,
                 RewardAddress = sp.RewardAddress,
