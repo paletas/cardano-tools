@@ -33,5 +33,5 @@ jobs:
           file: ./Silvestre.Cardano.Integration.DbSyncAPI/Dockerfile
           push: true
           tags: paletas/silvestre-tools-cardano:latest
-          cache-from: type=registry,ref=paletas/silvestre-tools-cardano:latest
+          cache-from: type=registry,ref=paletas/silvestre-cardano-dbsyncapi:latest
           cache-to: type=inline
