@@ -29,7 +29,8 @@ jobs:
         name: Build and push
         uses: docker/build-push-action@v2
         with:
-          context: ./Silvestre.Cardano.Integration.DbSyncAPI/
+          context: .
+          file: ./Silvestre.Cardano.Integration.DbSyncAPI/Dockerfile
           push: true
           tags: paletas/silvestre-tools-cardano:latest
           cache-from: type=registry,ref=paletas/silvestre-tools-cardano:latest
