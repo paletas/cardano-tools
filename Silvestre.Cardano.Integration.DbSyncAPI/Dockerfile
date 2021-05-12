@@ -16,6 +16,8 @@ RUN dotnet build "Silvestre.Cardano.Integration.DbSyncAPI.csproj" -c Release -o 
 FROM build AS publish
 RUN dotnet publish "Silvestre.Cardano.Integration.DbSyncAPI.csproj" -c Release -o /app/publish
 
+ENV ConnectionStrings__cardano-db-sync="Host=${POSTGRES_SERVER:-localhost};Database=${POSTGRES_DB:-$(< ''${SECRET_DIR:-/run/secrets}/postgres_db)};Username=${POSTGRES_USER:-$(< ''${SECRET_DIR:-/run/secrets}/postgres_user)};Password=${POSTGRES_PASSWORD:-$(< ''${SECRET_DIR:-/run/secrets}/postgres_password)};"
+
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .

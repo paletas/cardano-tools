@@ -65,6 +65,10 @@ services:
         build:
             context: .
             dockerfile: Silvestre.Cardano.Integration.DbSyncAPI/Dockerfile
+        secrets:
+            - postgres_password
+            - postgres_user
+            - postgres_db
         ports:
             - 3110:80
     silvestre.cardano.webapp:
