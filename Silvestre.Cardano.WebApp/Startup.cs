@@ -30,6 +30,7 @@ namespace Silvestre.Cardano.WebApp
 
             services.AddSingleton<CardanoAPI>(new CardanoAPI(Configuration.GetSection("Cardano")["GraphQL"], Configuration.GetSection("Cardano")["DbSync"]));
             services.AddSingleton<Hub<IBlocksHubClient>, BlocksHub>();
+            services.AddApplicationInsightsTelemetry(Configuration["APPINSIGHTS_CONNECTIONSTRING"]);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
