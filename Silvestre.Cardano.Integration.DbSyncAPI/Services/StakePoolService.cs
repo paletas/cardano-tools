@@ -26,7 +26,6 @@ namespace Silvestre.Cardano.Integration.DbSyncAPI.Services
             reply.StakePools.AddRange(listStakePools.StakePools.Select(sp => new StakePool
             {
                 PoolAddress = sp.PoolAddress,
-                RewardAddress = sp.RewardAddress,
 
                 Pledge = sp.Pledge,
                 Margin = (float)sp.Margin,
@@ -51,7 +50,6 @@ namespace Silvestre.Cardano.Integration.DbSyncAPI.Services
                 reply.StakePool = new StakePool
                 {
                     PoolAddress = stakePool.PoolAddress,
-                    RewardAddress = stakePool.RewardAddress,
 
                     Pledge = stakePool.Pledge,
                     Margin = (float)stakePool.Margin,

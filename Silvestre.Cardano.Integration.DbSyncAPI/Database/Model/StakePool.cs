@@ -12,8 +12,6 @@
 
         public ulong FixedCost { get; set; }
 
-        public string RewardAddress { get; set; }
-
         public string MetadataUrl { get; set; }
 
         public uint RetiringEpoch { get; set; }

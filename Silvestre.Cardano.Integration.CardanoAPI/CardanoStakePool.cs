@@ -13,7 +13,5 @@ namespace Silvestre.Cardano.Integration.CardanoAPI
         public CardanoAsset Margin { get; internal set; }
 
         public CardanoAsset Pledge { get; internal set; }
-
-        public CardanoAddress RewardsAddress { get; internal set; }
     }
 }

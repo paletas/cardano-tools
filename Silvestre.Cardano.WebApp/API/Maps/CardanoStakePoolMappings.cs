@@ -16,7 +16,6 @@ namespace Silvestre.Cardano.WebApp.API
                 MetadataUrl = stakePool.MetadataUrl,
 
                 PoolAddress = stakePool.PoolAddress.Address,
-                RewardsAddress = stakePool.RewardsAddress.Address,
                 MarginPercentage = stakePool.Margin.Quantity,
                 MaintenanceInADA = stakePool.Maintenance.Quantity,
                 PledgeInADA = stakePool.Pledge.Quantity

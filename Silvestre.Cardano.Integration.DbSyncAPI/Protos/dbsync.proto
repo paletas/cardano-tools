@@ -109,7 +109,6 @@ message StakePool {
 	uint32 ActiveSinceEpoch = 3;
 	float Margin = 4;
 	uint64 FixedCost = 5;
-	string RewardAddress = 6;
-	string MetadataUrl = 7;
-	uint32 RetiringEpoch = 8;
+	string MetadataUrl = 6;
+	uint32 RetiringEpoch = 7;
 }

@@ -73,7 +73,6 @@ namespace Silvestre.Cardano.Integration.CardanoAPI
                     Margin = new CardanoAsset((decimal)stakePool.Margin, CardanoAsset.PERCENTAGE_UNIT),
                     Maintenance = new CardanoAsset(stakePool.FixedCost, CardanoAsset.ADA_DECIMALPOINTER, CardanoAsset.ADA_UNIT),
                     Pledge = new CardanoAsset(stakePool.Pledge, CardanoAsset.ADA_DECIMALPOINTER, CardanoAsset.ADA_UNIT),
-                    RewardsAddress = new CardanoAddress(stakePool.RewardAddress, CardanoAddress.AddressKindEnum.Rewards),
                 });
             }
 
@@ -110,8 +109,7 @@ namespace Silvestre.Cardano.Integration.CardanoAPI
                 PoolAddress = new CardanoAddress(stakePool.PoolAddress, CardanoAddress.AddressKindEnum.StakePool),
                 Margin = new CardanoAsset((decimal)stakePool.Margin, CardanoAsset.PERCENTAGE_UNIT),
                 Maintenance = new CardanoAsset(stakePool.FixedCost, CardanoAsset.ADA_DECIMALPOINTER, CardanoAsset.ADA_UNIT),
-                Pledge = new CardanoAsset(stakePool.Pledge, CardanoAsset.ADA_DECIMALPOINTER, CardanoAsset.ADA_UNIT),
-                RewardsAddress = new CardanoAddress(stakePool.RewardAddress, CardanoAddress.AddressKindEnum.Rewards)
+                Pledge = new CardanoAsset(stakePool.Pledge, CardanoAsset.ADA_DECIMALPOINTER, CardanoAsset.ADA_UNIT)
             };
         }
 

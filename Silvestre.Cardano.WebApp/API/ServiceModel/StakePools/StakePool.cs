@@ -31,9 +31,6 @@ namespace Silvestre.Cardano.WebApp.API.ServiceModel.StakePools
         [JsonPropertyName("pledgeInADA")]
         public decimal PledgeInADA { get; internal set; }
 
-        [JsonPropertyName("rewardsAddress")]
-        public string RewardsAddress { get; internal set; }
-
         [JsonPropertyName("delegatedInADA")]
         public decimal DelegationInADA { get; internal set; }
 
