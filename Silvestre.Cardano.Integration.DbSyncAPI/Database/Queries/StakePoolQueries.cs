@@ -21,7 +21,6 @@ namespace Silvestre.Cardano.Integration.DbSyncAPI.Database.Queries
 				FROM public.pool_hash
 					INNER JOIN public.pool_update ON pool_hash.id = pool_update.hash_id
 					INNER JOIN public.pool_meta_data ON pool_update.registered_tx_id = pool_meta_data.registered_tx_id
-					INNER JOIN public.pool_relay ON pool_relay.update_id = pool_update.id
 					LEFT JOIN public.pool_retire ON pool_retire.hash_id = pool_hash.id
 				WHERE pool_retire.retiring_epoch IS NULL OR pool_retire.retiring_epoch >= (SELECT MAX(no) FROM public.epoch)
 				ORDER BY pool_hash.id ASC
@@ -44,7 +43,6 @@ namespace Silvestre.Cardano.Integration.DbSyncAPI.Database.Queries
 				FROM public.pool_hash
 					INNER JOIN public.pool_update ON pool_hash.id = pool_update.hash_id
 					INNER JOIN public.pool_meta_data ON pool_update.registered_tx_id = pool_meta_data.registered_tx_id
-					INNER JOIN public.pool_relay ON pool_relay.update_id = pool_update.id
 					LEFT JOIN public.pool_retire ON pool_retire.hash_id = pool_hash.id
 				WHERE (pool_retire.retiring_epoch IS NULL OR pool_retire.retiring_epoch >= (SELECT MAX(no) FROM public.epoch))
 					AND pool_hash.view = @PoolAddress
