@@ -13,10 +13,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="Pages\StakePools\Index.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.15.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="5.0.5" />
     <PackageReference Include="Microsoft.Azure.SignalR" Version="1.8.1" />
@@ -27,18 +23,6 @@
   <ItemGroup>
     <Folder Include="wwwroot\css\" />
     <Folder Include="wwwroot\lib\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <UpToDateCheckInput Remove="Pages\StakePools\Index.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <_ContentIncludedByDefault Remove="Pages\StakePools\Index.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Pages\StakePools\Index.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
