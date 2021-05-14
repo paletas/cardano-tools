@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Silvestre.Cardano.WebApp.Workers;
+using Microsoft.Extensions.Logging;
 
 namespace Silvestre.Cardano.WebApp
 {
@@ -14,6 +13,10 @@ namespace Silvestre.Cardano.WebApp
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+                .ConfigureLogging(logging =>
+                {
+                    logging.AddAzureWebAppDiagnostics();
+                })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
