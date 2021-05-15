@@ -23,7 +23,7 @@ namespace Silvestre.Cardano.Integration.DbSyncAPI.Database.Queries
 						SELECT pool_update.hash_id, pool_update.pledge, pool_update.active_epoch_no, pool_update.margin, pool_update.fixed_cost, pool_meta_data.url
 						FROM public.pool_update
 							INNER JOIN public.pool_meta_data ON pool_update.registered_tx_id = pool_meta_data.registered_tx_id
-						--WHERE pool_hash.id = pool_update.hash_id AND pool_update.active_epoch_no <= (SELECT MAX(no) FROM public.epoch)
+						WHERE pool_hash.id = pool_update.hash_id AND pool_update.active_epoch_no <= (SELECT MAX(no) FROM public.epoch)
 						ORDER BY pool_update.active_epoch_no DESC
 						LIMIT 1
 					) pool_information ON TRUE
@@ -51,7 +51,7 @@ namespace Silvestre.Cardano.Integration.DbSyncAPI.Database.Queries
 						SELECT pool_update.hash_id, pool_update.pledge, pool_update.active_epoch_no, pool_update.margin, pool_update.fixed_cost, pool_meta_data.url
 						FROM public.pool_update
 							INNER JOIN public.pool_meta_data ON pool_update.registered_tx_id = pool_meta_data.registered_tx_id
-						--WHERE pool_hash.id = pool_update.hash_id AND pool_update.active_epoch_no <= (SELECT MAX(no) FROM public.epoch)
+						WHERE pool_hash.id = pool_update.hash_id AND pool_update.active_epoch_no <= (SELECT MAX(no) FROM public.epoch)
 						ORDER BY pool_update.active_epoch_no DESC
 						LIMIT 1
 					) pool_information ON TRUE
