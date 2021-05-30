@@ -3,8 +3,6 @@ using Grpc.Net.Client;
 using Silvestre.Cardano.Integration.DbSync.Services;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -16,6 +14,7 @@ namespace Silvestre.Cardano.Integration.CardanoAPI.Services.DbSync
         private readonly Epochs.EpochsClient _epochsClient;
         private readonly Blocks.BlocksClient _blocksClient;
         private readonly StakePools.StakePoolsClient _stakePoolsClient;
+        private readonly Transactions.TransactionsClient _transactionsClient;
 
         public DbSyncAPI(string baseAddress) : this(new Uri(baseAddress))
         { }
@@ -27,6 +26,7 @@ namespace Silvestre.Cardano.Integration.CardanoAPI.Services.DbSync
             this._epochsClient = new Epochs.EpochsClient(GrpcChannel.ForAddress(baseAddress));
             this._blocksClient = new Blocks.BlocksClient(GrpcChannel.ForAddress(baseAddress));
             this._stakePoolsClient = new StakePools.StakePoolsClient(GrpcChannel.ForAddress(baseAddress));
+            this._transactionsClient = new Transactions.TransactionsClient(GrpcChannel.ForAddress(baseAddress));
         }
 
 
@@ -57,6 +57,12 @@ namespace Silvestre.Cardano.Integration.CardanoAPI.Services.DbSync
         {
             var response = await this._stakePoolsClient.GetStakePoolAsync(new GetStakePoolRequest { PoolAddress = poolAddress }).ResponseAsync.ConfigureAwait(false);
             return response.StakePool;
+        }
+
+        public async Task<Transaction> GetTransaction(string transactionAddress)
+        {
+            var response = await this._transactionsClient.GetTransactionDetailsAsync(new GetTransactionDetailsRequest { TransactionHashId = transactionAddress }).ResponseAsync.ConfigureAwait(false);
+            return response.Transaction;
         }
     }
 }

@@ -1,0 +1,120 @@
+﻿@page "/transaction/{id}"
+@model Silvestre.Cardano.WebApp.Pages.Transactions.ViewerModel
+
+@section Scripts
+{
+<script type="text/javascript" src="~/js/pages/transaction-viewer.js"> </script>
+}
+
+<div class="bg-white shadow overflow-hidden sm:rounded-lg" x-data="transactionViewer()" x-init="fetchTransaction('@Model.TransactionId')">
+	<template x-if="isLoading === true">
+		<p>Loading...</p>
+	</template>
+	<template x-if="initialized && errors.any() === true">
+		<p>An error has ocurred</p>
+	</template>
+	<template x-if="initialized && errors.any() === false && transaction === undefined">
+		<p>Transaction wasn't found</p>
+	</template>
+	<template x-if="initialized && errors.any() === false && transaction !== undefined">
+		<div class="flex flex-row">
+			<div class="flex-1">
+				<div class="px-4 py-5 sm:px-6">
+					<h3 class="text-lg leading-6 font-medium text-gray-900">
+						Transaction Data
+					</h3>
+				</div>
+				<div class="border-t border-gray-200">
+					<dl>
+						<div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-5 sm:gap-4 sm:px-6">
+							<dt class="text-sm font-medium text-gray-500">
+								When
+							</dt>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-4" x-text="moment(transaction.timestamp).local().format('MMMM DD YYYY [at] HH:mm:ss')">
+							</dd>
+						</div>
+						<div class="bg-white px-4 py-5 sm:grid sm:grid-cols-5 sm:gap-4 sm:px-6">
+							<dt class="text-sm font-medium text-gray-500">
+								Included In
+							</dt>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-4" x-text="`Epoch ${transaction.epochNumber}, Block #${transaction.blockNumber}`">
+							</dd>
+						</div>
+						<div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-5 sm:gap-4 sm:px-6">
+							<dt class="text-sm font-medium text-gray-500">
+								Total Spent
+							</dt>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-4" x-text="`₳${transaction.fees + transaction.transactionOutputTotal} (ADA)`">
+							</dd>
+						</div>
+						<div class="bg-white px-4 py-5 sm:grid sm:grid-cols-5 sm:gap-4 sm:px-6">
+							<dt class="text-sm font-medium text-gray-500">
+								Total Sent
+							</dt>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-4" x-text="`₳${transaction.transactionOutputTotal} (ADA)`">
+							</dd>
+						</div>
+						<div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-5 sm:gap-4 sm:px-6">
+							<dt class="text-sm font-medium text-gray-500">
+								Fees
+							</dt>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-4" x-text="`₳${transaction.fees} (ADA)`">
+							</dd>
+						</div>
+						<template x-if="transaction.metadata !== undefined && transaction.metadata.length > 0">
+							<div class="bg-white px-4 py-5 sm:grid sm:grid-cols-5 sm:gap-4 sm:pl-6 sm:pr-2">
+								<dt class="text-sm font-medium text-gray-500">
+									Metadata
+								</dt>
+								<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-4">
+									<ul class="border border-gray-200 rounded-md divide-y divide-gray-200">
+										<template x-for="(metadataDetail, index) in transaction.metadata" :key="index">
+											<li class="pl-3 pr-2 py-3 flex items-center justify-between text-sm">
+												<pre>
+													<code class="language-json" x-text="JSON.stringify(metadataDetail.data, undefined, 3)">
+				 
+													</code>
+												</pre>
+											</li>
+										</template>
+									</ul>
+								</dd>
+							</div>
+						</template>
+					</dl>
+				</div>
+			</div>
+			<div class="flex-1 flex-grow">
+				<div class="px-4 py-5 sm:px-6">
+					<h3 class="text-lg leading-6 font-medium text-gray-900">
+						Outputs
+					</h3>
+				</div>
+				<div class="border-t border-gray-200">
+					<dl>
+						<template x-if="transaction.output !== undefined && transaction.output.length > 0">
+							<div class="bg-white px-4 py-5 sm:grid sm:grid-cols-2 sm:gap-4 sm:px-6">
+								<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+									<ul class="border border-gray-200 rounded-md divide-y divide-gray-200">
+										<template x-for="(outputDetail, index) in transaction.output" :key="index">
+											<li class="pl-3 pr-4 py-3 flex items-center justify-between text-sm">
+												<div class="w-0 flex-1 flex items-center">
+													<span class="ml-2 flex-1 w-0 truncate" x-text="outputDetail.addressTo">
+													</span>
+												</div>
+												<div class="ml-4 flex-shrink-0">
+													<span class="font-medium text-indigo-600 hover:text-indigo-500" x-text="`₳${outputDetail.amount} (ADA)`">
+													</span>
+												</div>
+											</li>
+										</template>
+									</ul>
+								</dd>
+							</div>
+						</template>
+					</dl>
+				</div>
+			</div>
+		</div>
+	</template>
+</div>

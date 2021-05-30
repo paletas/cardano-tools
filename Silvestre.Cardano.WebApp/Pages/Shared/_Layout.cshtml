@@ -1,127 +1,152 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <script data-ad-client="ca-pub-7199897902029134" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Silvestre's Cardano Tools @ViewData["Title"]</title>
-    <link rel="stylesheet" href="~/css/layout.css" />
-    <meta name="keywords" content="silvestre" />
+	<script data-ad-client="ca-pub-7199897902029134" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Silvestre's Cardano Tools @ViewData["Title"]</title>
+	<link rel="stylesheet" href="~/css/layout.css" />
+	<meta name="keywords" content="silvestre" />
 </head>
 <body>
-    <nav class="bg-gray-800" x-data="epochViewer()" x-init="initFetchEpoch()">
-        <div class="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <img class="h-8 w-8" src="~/img/silvestre-cardano-logo.svg" alt="Workflow">
-                    </div>
-                    <div class="hidden lg:block">
-                        <div class="ml-10 flex items-baseline space-x-4">
-                            <a href="/" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Home</a>
-                            <a href="/pools" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Stake Pools</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="-mr-2 flex lg:hidden">
-                    <!-- Mobile menu button -->
-                    <button class="navbar-burger bg-gray-800 inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
-                        <span class="sr-only">Open main menu</span>
-                        <!--
-                        Heroicon name: menu
+	<nav class="bg-gray-800" x-data="epochViewer()" x-init="initFetchEpoch()">
+		<div class="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
+			<div class="flex items-center justify-between h-16">
+				<div class="flex flex-1 items-center">
+					<div class="flex-shrink-0">
+						<img class="h-8 w-8" src="~/img/silvestre-cardano-logo.svg" alt="Logo">
+					</div>
 
-                        Menu open: "hidden", Menu closed: "block"
-                        -->
-                        <svg id="main-nav-button-closed" class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                        </svg>
-                        <!--
-                        Heroicon name: x
+					<div class="flex-1 justify-between hidden lg:block w-max">
+						<div class="ml-10 flex-initial flex items-baseline space-x-4">
+							<a href="/" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Home</a>
+							<a href="/pools" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Stake Pools</a>
+						</div>
+					</div>
 
-                        Menu open: "block", Menu closed: "hidden"
-                        -->
-                        <svg id="main-nav-button-open" class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    </button>
-                </div>
-            </div>
-        </div>
+					<div class="flex-grow hidden lg:block" x-data="search()" x-init="setupSearch()">
+						<div class="relative mx-auto text-gray-600 py-2">
+							<input class="w-full border-2 border-gray-300 bg-white h-8 px-5 pr-16 rounded-lg text-sm focus:outline-none" type="search" name="search" placeholder="Search by Transaction Hash" x-on:input.debounce="search($event.target.value)">
+							<button type="submit" class="absolute right-0 top-0 mt-4 mr-4">
+								<svg class="text-gray-600 h-4 w-4 fill-current" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px"
+										viewBox="0 0 56.966 56.966" style="enable-background:new 0 0 56.966 56.966;" xml:space="preserve" width="512px" height="512px">
+									<path d="M55.146,51.887L41.588,37.786c3.486-4.144,5.396-9.358,5.396-14.786c0-12.682-10.318-23-23-23s-23,10.318-23,23  s10.318,23,23,23c4.761,0,9.298-1.436,13.177-4.162l13.661,14.208c0.571,0.593,1.339,0.92,2.162,0.92  c0.779,0,1.518-0.297,2.079-0.837C56.255,54.982,56.293,53.08,55.146,51.887z M23.984,6c9.374,0,17,7.626,17,17s-7.626,17-17,17  s-17-7.626-17-17S14.61,6,23.984,6z" />
+								</svg>
+							</button>
+						</div>
+					</div>
+				</div>
+				<div class="-mr-2 flex lg:hidden">
+					<!-- Mobile menu button -->
+					<button class="navbar-burger bg-gray-800 inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
+						<span class="sr-only">Open main menu</span>
+						<!--
+						Heroicon name: menu
 
-        <!--
-        Mobile menu, toggle classes based on menu state.
+						Menu open: "hidden", Menu closed: "block"
+						-->
+						<svg id="main-nav-button-closed" class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+						</svg>
+						<!--
+						Heroicon name: x
 
-        Open: "block", closed: "hidden"
-        -->
-        <div id="main-nav" class="hidden lg:hidden flex flex-row divide-x divide-white">
-            <div class="flex-auto px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
-                <a href="/" class="bg-gray-900 text-white block px-3 py-2 rounded-md text-base font-medium">Home</a>
-                <a href="/pools" class="bg-gray-900 text-white block px-3 py-2 rounded-md text-base font-medium">Stake Pools</a>
-            </div>
+						Menu open: "block", Menu closed: "hidden"
+						-->
+						<svg id="main-nav-button-open" class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+						</svg>
+					</button>
+				</div>
+			</div>
+		</div>
 
-            <template x-if="initialized">
-                <div class="flex-shrink relative px-2 pt-2 pb-3 sm:px-3 w-40">
-                    <svg class="max-h-full max-w-full" viewBox="0 0 33.83098862 33.83098862" xmlns="http://www.w3.org/2000/svg">
-                        <circle stroke="#efefef" stroke-width="2" fill="none" cx="16.91549431" cy="16.91549431" r="15.91549431" />
-                        <circle stroke="#00acc1" stroke-width="2" :stroke-dasharray="`${epoch.slotNumber / epoch.maximumSlots * 100},100`" stroke-linecap="round" fill="none" cx="16.91549431" cy="16.91549431" r="15.91549431" transform="rotate(-90 16.91549431 16.91549431)" />
-                    </svg>
+		<!--
+		Mobile menu, toggle classes based on menu state.
 
-                    <div class="absolute inset-y-6 w-36 h-36">
-                        <div class="text-white text-xs text-center font-semibold">Epoch</div>
-                        <div alt="Epoch number" class="text-white text-4xl text-center font-bold" x-text="epoch.number">256</div>
-                        <div alt="Block count" class="mt-5 text-white text-lg text-center font-bold" x-text="epoch.blockCount">1000</div>
-                    </div>
-                    <div class="mx-auto mt-2 text-center text-white text-sm">
-                        <div alt="Epoch slots" x-text="`${epoch.slotNumber} / ${epoch.maximumSlots}`">432000 / 432000</div>
-                        <div alt="Epoch end date" x-text="moment(epoch.endDate).local().format('MMMM DD [at] HH:mm')">February 31st at 22:25</div>
-                    </div>
-                </div>
-            </template>
-        </div>
+		Open: "block", closed: "hidden"
+		-->
+		<div id="main-nav" class="hidden lg:hidden flex flex-row divide-x divide-white">
+			<div class="flex-auto px-2 pt-2 pb-3 space-y-1 sm:px-3">
+				<div x-data="search()" x-init="setupSearch()">
+					<div class="pt-2 relative mx-auto text-gray-600">
+						<input class="border-2 border-gray-300 bg-white h-10 px-5 pr-16 rounded-lg text-sm focus:outline-none" type="search" name="search" placeholder="Search by Transaction Hash" x-on:input.debounce="search($event.target.value)">
+						<button type="submit" class="absolute right-0 top-0 mt-5 mr-4">
+							<svg class="text-gray-600 h-4 w-4 fill-current" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px"
+								 viewBox="0 0 56.966 56.966" style="enable-background:new 0 0 56.966 56.966;" xml:space="preserve" width="512px" height="512px">
+								<path d="M55.146,51.887L41.588,37.786c3.486-4.144,5.396-9.358,5.396-14.786c0-12.682-10.318-23-23-23s-23,10.318-23,23  s10.318,23,23,23c4.761,0,9.298-1.436,13.177-4.162l13.661,14.208c0.571,0.593,1.339,0.92,2.162,0.92  c0.779,0,1.518-0.297,2.079-0.837C56.255,54.982,56.293,53.08,55.146,51.887z M23.984,6c9.374,0,17,7.626,17,17s-7.626,17-17,17  s-17-7.626-17-17S14.61,6,23.984,6z" />
+							</svg>
+						</button>
+					</div>
+				</div>
+				<!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
+				<a href="/" class="bg-gray-900 text-white block px-3 py-2 rounded-md text-base font-medium">Home</a>
+				<a href="/pools" class="bg-gray-900 text-white block px-3 py-2 rounded-md text-base font-medium">Stake Pools</a>
+			</div>
 
-        <template x-if="initialized">
-            <div class="absolute top-0 right-0 mr-10 bg-gray-800 rounded-b-md p-3 z-20 hidden lg:block">
-                <svg class="w-36 h-36" viewBox="0 0 33.83098862 33.83098862" xmlns="http://www.w3.org/2000/svg">
-                    <circle stroke="#efefef" stroke-width="2" fill="none" cx="16.91549431" cy="16.91549431" r="15.91549431" />
-                    <circle stroke="#00acc1" stroke-width="2" :stroke-dasharray="`${epoch.slotNumber / epoch.maximumSlots * 100},100`" stroke-linecap="round" fill="none" cx="16.91549431" cy="16.91549431" r="15.91549431" transform="rotate(-90 16.91549431 16.91549431)" />
-                </svg>
+			<template x-if="initialized">
+				<div class="flex-shrink relative px-2 pt-2 pb-3 sm:px-3 w-40">
+					<svg class="max-h-full max-w-full" viewBox="0 0 33.83098862 33.83098862" xmlns="http://www.w3.org/2000/svg">
+						<circle stroke="#efefef" stroke-width="2" fill="none" cx="16.91549431" cy="16.91549431" r="15.91549431" />
+						<circle stroke="#00acc1" stroke-width="2" :stroke-dasharray="`${epoch.slotNumber / epoch.maximumSlots * 100},100`" stroke-linecap="round" fill="none" cx="16.91549431" cy="16.91549431" r="15.91549431" transform="rotate(-90 16.91549431 16.91549431)" />
+					</svg>
 
-                <div class="absolute inset-y-8 w-36 h-36">
-                    <div class="text-white text-xs text-center font-semibold">Epoch</div>
-                    <div alt="Epoch number" class="text-white text-4xl text-center font-bold" x-text="epoch.number">256</div>
-                    <div alt="Block count" class="mt-5 text-white text-lg text-center font-bold" x-text="epoch.blockCount">1000</div>
-                </div>
-                <div class="mx-auto mt-2 text-center text-white text-sm">
-                    <div alt="Epoch slots" x-text="`${epoch.slotNumber} / ${epoch.maximumSlots}`">432000 / 432000</div>
-                    <div alt="Epoch end date" x-text="moment(epoch.endDate).local().format('MMMM DD [at] HH:mm')">February 31st at 22:25</div>
-                </div>
-            </div>
-        </template>
-    </nav>
+					<div class="absolute inset-y-6 w-36 h-36">
+						<div class="text-white text-xs text-center font-semibold">Epoch</div>
+						<div alt="Epoch number" class="text-white text-4xl text-center font-bold" x-text="epoch.number">256</div>
+						<div alt="Block count" class="mt-5 text-white text-lg text-center font-bold" x-text="epoch.blockCount">1000</div>
+					</div>
+					<div class="mx-auto mt-2 text-center text-white text-sm">
+						<div alt="Epoch slots" x-text="`${epoch.slotNumber} / ${epoch.maximumSlots}`">432000 / 432000</div>
+						<div alt="Epoch end date" x-text="moment(epoch.endDate).local().format('MMMM DD [at] HH:mm')">February 31st at 22:25</div>
+					</div>
+				</div>
+			</template>
+		</div>
 
-    <header class="bg-white shadow">
-        <div class="max-w-screen-2xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-            <h1 class="text-2xl font-bold leading-tight text-gray-900">@ViewData["Subtitle"]</h1>
-        </div>
-    </header>
-    <main>
-        <div class="max-w-screen-2xl mx-auto py-6 sm:px-6 lg:px-8">
-            @RenderBody()
-        </div>
-    </main>
-    <footer class="bg-white border-2 pt-2 fixed bottom-0 left-0">
-        <CultureSelector />
-    </footer>
-    
-    <script src="~/lib/alpine-magic-helpers/dist/component.js" asp-append-version="true"></script>
-    <script src="~/lib/alpinejs/alpine.js" asp-append-version="true"></script>
-    <script src="~/lib/moment.js/moment.js" asp-append-version="true"></script>
-    <script src="~/lib/microsoft-signalr/signalr.js" asp-append-version="true"></script>
-    <script src="~/js/components/pagination.js" asp-append-version="true"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    <script src="~/js/epochViewer.js" asp-append-version="true"></script>
+		<template x-if="initialized">
+			<div class="absolute top-0 right-0 mr-10 bg-gray-800 rounded-b-md p-3 z-20 hidden lg:block">
+				<svg class="w-36 h-36" viewBox="0 0 33.83098862 33.83098862" xmlns="http://www.w3.org/2000/svg">
+					<circle stroke="#efefef" stroke-width="2" fill="none" cx="16.91549431" cy="16.91549431" r="15.91549431" />
+					<circle stroke="#00acc1" stroke-width="2" :stroke-dasharray="`${epoch.slotNumber / epoch.maximumSlots * 100},100`" stroke-linecap="round" fill="none" cx="16.91549431" cy="16.91549431" r="15.91549431" transform="rotate(-90 16.91549431 16.91549431)" />
+				</svg>
 
-    @RenderSection("Scripts", required: false)
+				<div class="absolute inset-y-8 w-36 h-36">
+					<div class="text-white text-xs text-center font-semibold">Epoch</div>
+					<div alt="Epoch number" class="text-white text-4xl text-center font-bold" x-text="epoch.number">256</div>
+					<div alt="Block count" class="mt-5 text-white text-lg text-center font-bold" x-text="epoch.blockCount">1000</div>
+				</div>
+				<div class="mx-auto mt-2 text-center text-white text-sm">
+					<div alt="Epoch slots" x-text="`${epoch.slotNumber} / ${epoch.maximumSlots}`">432000 / 432000</div>
+					<div alt="Epoch end date" x-text="moment(epoch.endDate).local().format('MMMM DD [at] HH:mm')">February 31st at 22:25</div>
+				</div>
+			</div>
+		</template>
+	</nav>
+
+	<header class="bg-white shadow">
+		<div class="max-w-screen-2xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+			<h1 class="text-2xl font-bold leading-tight text-gray-900">@ViewData["Subtitle"]</h1>
+		</div>
+	</header>
+	<main>
+		<div class="max-w-screen-2xl mx-auto py-6 sm:px-6 lg:px-8">
+			@RenderBody()
+		</div>
+	</main>
+	<footer class="bg-white border-2 pt-2 fixed bottom-0 left-0">
+		<CultureSelector />
+	</footer>
+
+	<script src="~/lib/alpine-magic-helpers/dist/component.js" asp-append-version="true"></script>
+	<script src="~/lib/alpinejs/alpine.js" asp-append-version="true"></script>
+	<script src="~/lib/moment.js/moment.js" asp-append-version="true"></script>
+	<script src="~/lib/microsoft-signalr/signalr.js" asp-append-version="true"></script>
+	<script src="~/js/components/pagination.js" asp-append-version="true"></script>
+	<script src="~/js/site.js" asp-append-version="true"></script>
+	<script src="~/js/epoch-viewer.js" asp-append-version="true"></script>
+	<script src="~/js/search.js" asp-append-version="true"></script>
+
+	@RenderSection("Scripts", required: false)
 </body>
 </html>

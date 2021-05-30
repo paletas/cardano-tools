@@ -125,5 +125,33 @@ namespace Silvestre.Cardano.Integration.CardanoAPI
                 Website = metadata?.Homepage
             };
         }
+
+        public async Task<CardanoTransaction?> GetTransactionOutput(string transactionAddress)
+        {
+            var transaction = await _dbSyncAPI.GetTransaction(transactionAddress).ConfigureAwait(false);
+            if (transaction == null) return null;
+
+            return new CardanoTransaction
+            {
+                TransactionId = transaction.TransactionId,
+                TransactionHash = transaction.TransactionHash,
+                TransactionCount = transaction.TransactionCount,
+                TransactionSize = transaction.TransactionSize,
+                TransactionOutputTotal = new CardanoAsset(transaction.OutSum, CardanoAsset.ADA_DECIMALPOINTER, CardanoAsset.ADA_UNIT),
+                BlockNumber = transaction.BlockNumber,
+                BlockSize = transaction.BlockSize,
+                EpochNumber = transaction.EpochNumber,
+                EpochSlotNumber = transaction.EpochSlotNumber,
+                SlotNumber = transaction.SlotNumber,
+                Deposit = new CardanoAsset(transaction.Deposit, CardanoAsset.ADA_DECIMALPOINTER, CardanoAsset.ADA_UNIT),
+                Fees = new CardanoAsset(transaction.Fees, CardanoAsset.ADA_DECIMALPOINTER, CardanoAsset.ADA_UNIT),
+                InvalidAfterBlock = transaction.InvalidAfterBlock,
+                InvalidBeforeBlock = transaction.InvalidBeforeBlock,
+                Timestamp = transaction.Timestamp.ToDateTime(),
+                TransactionInId = transaction.TransactionInId,
+                Metadata = transaction.Metadata.Select(metadata => new CardanoTransactionMetadata { MetadataKey = metadata.Key, MetadataJson = metadata.Json }).ToArray(),
+                Output = transaction.Output.Select(output => new CardanoTransactionOutput { AddressTo = output.Address, Output = new CardanoAsset(output.Amount, CardanoAsset.ADA_DECIMALPOINTER, CardanoAsset.ADA_UNIT) }).ToArray()
+            };
+        }
     }
 }

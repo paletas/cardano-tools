@@ -48,5 +48,10 @@ namespace Silvestre.Cardano.Integration.DbSyncAPI
         {
             return StakePoolQueries.GetStakePool(this.GetConnection(), poolAddress);
         }
+
+        public Task<IEnumerable<TransactionOutput>> GetTransactionOutput(string transactionId)
+        {
+            return TransactionQueries.GetTransactionOutputs(this.GetConnection(), transactionId);
+        }
     }
 }

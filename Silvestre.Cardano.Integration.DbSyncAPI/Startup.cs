@@ -40,6 +40,7 @@ namespace Silvestre.Cardano.Integration.DbSyncAPI
                 endpoints.MapGrpcService<EpochService>();
                 endpoints.MapGrpcService<BlockService>();
                 endpoints.MapGrpcService<StakePoolService>();
+                endpoints.MapGrpcService<TransactionService>();
 
                 endpoints.MapGet("/", async context =>
                 {

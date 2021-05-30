@@ -12,8 +12,7 @@ service Epochs {
   rpc GetCurrentEpoch (CurrentEpochRequest) returns (CurrentEpochReply);
 }
 
-message CurrentEpochRequest
-{
+message CurrentEpochRequest {
 
 }
 
@@ -29,8 +28,7 @@ service Blocks {
 	rpc BlockUpdates (BlockUpdatesRequest) returns (stream Block);
 }
 
-message LatestBlockRequest
-{
+message LatestBlockRequest {
 	uint32 EpochNumber = 1;
 }
 
@@ -38,40 +36,47 @@ message LatestBlockReply {
   Block Block = 1;
 }
 
-message BlockUpdatesRequest
-{
+message BlockUpdatesRequest {
 	uint32 DelayUpdatesMillisecond = 1;
 }
 
 /// Stake Pools
-service StakePools
-{
+service StakePools {
 	rpc ListStakePools (ListStakePoolsRequest) returns (ListStakePoolsReply);
 
 	rpc GetStakePool (GetStakePoolRequest) returns (GetStakePoolReply);
 }
 
-message ListStakePoolsRequest
-{
+message ListStakePoolsRequest {
 	uint32 Offset = 1;
 	uint32 Limit = 2;
 }
 
-message ListStakePoolsReply
-{
+message ListStakePoolsReply {
 	uint64 Total = 1;
 	uint64 From = 2;
 	repeated StakePool StakePools = 3;
 }
 
-message GetStakePoolRequest
-{
+message GetStakePoolRequest {
 	string PoolAddress = 1;
 }
 
-message GetStakePoolReply
-{
+message GetStakePoolReply {
 	StakePool StakePool = 1;
+}
+
+///Transactions
+service Transactions {
+	rpc GetTransactionDetails (GetTransactionDetailsRequest) returns (GetTransactionDetailsResponse);
+}
+
+message GetTransactionDetailsRequest {
+	string TransactionHashId = 1;
+}
+
+message GetTransactionDetailsResponse {
+	Transaction Transaction = 1;
 }
 
 //Base Types
@@ -111,4 +116,35 @@ message StakePool {
 	uint64 FixedCost = 5;
 	string MetadataUrl = 6;
 	uint32 RetiringEpoch = 7;
+}
+
+message Transaction {	
+	uint64 TransactionId = 1;
+	string TransactionHash = 2;
+	uint32 EpochNumber = 3;
+	uint32 SlotNumber = 4;
+	uint32 EpochSlotNumber = 5;
+	uint32 BlockNumber = 6;
+	uint64 TransactionCount = 7;
+	google.protobuf.Timestamp Timestamp = 8;
+	uint32 BlockSize = 9;
+	uint64 OutSum = 10;
+	uint64 Fees = 11;
+	uint64 Deposit = 12;
+	uint32 TransactionSize = 13;
+	uint64 InvalidBeforeBlock = 14;
+	uint64 InvalidAfterBlock = 15;
+	repeated TransactionMetadata Metadata = 16;
+	repeated TransactionOutput Output = 17;
+	uint64 TransactionInId = 18;
+}
+
+message TransactionMetadata {
+	uint64 Key = 1;
+	string Json = 2;
+}
+
+message TransactionOutput {
+	string Address = 1;
+	uint64 Amount = 2;
 }
