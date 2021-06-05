@@ -18,6 +18,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		docker-compose.yml = docker-compose.yml
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GitHub", "GitHub", "{FFB0DCBE-B028-4455-B57E-58B36955A1B0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Workflows", "Workflows", "{A23B1C00-89DA-4031-BD72-C130B8C49B87}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\azure-webapp.yml = .github\workflows\azure-webapp.yml
+		.github\workflows\codeql-analysis.yml = .github\workflows\codeql-analysis.yml
+		.github\workflows\docker-dbsyncapi.yml = .github\workflows\docker-dbsyncapi.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,6 +52,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{369C69E7-AA18-4022-A596-71FBF7E8C512} = {20120DDA-BDFD-4ECB-AE35-A15C1FAC6543}
 		{25E8A43D-412B-4FBC-A70E-5535D52C5E60} = {20120DDA-BDFD-4ECB-AE35-A15C1FAC6543}
+		{A23B1C00-89DA-4031-BD72-C130B8C49B87} = {FFB0DCBE-B028-4455-B57E-58B36955A1B0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6E46908E-683C-48FA-BD43-3B18D7F981B8}
