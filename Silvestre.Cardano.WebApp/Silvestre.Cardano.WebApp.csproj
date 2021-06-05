@@ -6,6 +6,9 @@
     <UserSecretsId>65fab9d0-42de-4f97-a138-795d33463834</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <ApplicationInsightsResourceId>/subscriptions/319faf03-b317-443e-a06f-1de4017e3b41/resourceGroups/silvestre-tools-cardano/providers/microsoft.insights/components/SilvestreToolsCardano</ApplicationInsightsResourceId>
+    <Authors>João Silvestre</Authors>
+    <Company>Silvestre</Company>
+    <Product>Silvestre Cardano Tools</Product>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -13,8 +16,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.15.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="5.0.5" />
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.17.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="5.0.6" />
     <PackageReference Include="Microsoft.Azure.SignalR" Version="1.8.1" />
     <PackageReference Include="Microsoft.Extensions.Logging.AzureAppServices" Version="5.0.6" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.13" />

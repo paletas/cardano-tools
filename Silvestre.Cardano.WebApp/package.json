@@ -1,20 +1,20 @@
 {
-  "name": "Silvestre.Website.CardanoPool",
-  "version": "0.1.0",
+  "name": "silvestre-website-cardanopool",
+  "version": "0.2.0",
   "peerDependencies": {
-    "autoprefixer": "10.1.0",
-    "postcss": "8.2.1"
+    "autoprefixer": "^10.1.0",
+    "postcss": "^8.2.1"
   },
   "devDependencies": {
     "@tailwindcss/forms": "^0.2.1",
-    "autoprefixer": "10.1.0",
-    "gulp": "4.0.2",
-    "gulp-clean": "0.4.0",
-    "gulp-postcss": "9.0.0",
-    "precss": "4.0.0",
-    "tailwindcss": "2.0.2"
+    "autoprefixer": "^10.2.6",
+    "gulp": "^4.0.2",
+    "gulp-clean": "^0.4.0",
+    "gulp-postcss": "^9.0.0",
+    "precss": "^4.0.0",
+    "tailwindcss": "^2.1.4"
   },
   "dependencies": {
-    "postcss": "^8.2.1"
+    "postcss": "^8.3.0"
   }
 }
