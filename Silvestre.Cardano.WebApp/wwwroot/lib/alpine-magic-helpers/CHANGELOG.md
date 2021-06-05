@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.2.2] - 2021-05-04
+### Fixed
+- [`$component`]: x-for was not working correctly when looping on a property from the parent scope (i.e. `x-for="item in $parent.items"`).
+
 ## [v1.2.1] - 2021-04-20
 ### Fixed
 - [`$interval`]: timeOut was not cleared correctly when paused. When paused and resumed straightaway, it was leading to duplicate callbacks being invoked.

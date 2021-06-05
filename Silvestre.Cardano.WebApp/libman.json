@@ -11,7 +11,7 @@
       "destination": "wwwroot/lib/moment.js/"
     },
     {
-      "library": "microsoft-signalr@3.1.14",
+      "library": "microsoft-signalr@5.0.5",
       "destination": "wwwroot/lib/microsoft-signalr/"
     },
     {
@@ -20,7 +20,7 @@
     },
     {
       "provider": "unpkg",
-      "library": "alpine-magic-helpers@1.2.1",
+      "library": "alpine-magic-helpers@1.2.2",
       "destination": "wwwroot/lib/alpine-magic-helpers/"
     }
   ]
