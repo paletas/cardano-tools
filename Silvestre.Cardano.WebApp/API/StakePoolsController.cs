@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Silvestre.Cardano.Integration.CardanoAPI;
-using Silvestre.Cardano.WebApp.API.ServiceModel.StakePools;
+using Silvestre.Cardano.WebApp.API.ServiceModel.StakePool;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,9 +19,9 @@ namespace Silvestre.Cardano.WebApp.API
         }
 
         [HttpGet]
-        public async Task<ListStakePoolsResponse> Get([FromQuery(Name = "count")] uint count, [FromQuery(Name = "offset")] uint offset = 0, [FromQuery(Name = "includeMetadata")] bool includeMetadata = false)
+        public async Task<ListStakePoolsResponse> List([FromQuery(Name = "epoch")] uint? epochNumber, [FromQuery(Name = "count")] uint count, [FromQuery(Name = "offset")] uint offset = 0, [FromQuery(Name = "includeMetadata")] bool includeMetadata = false)
         {
-            var (total, from, stakePools) = await this._cardanoAPI.ListStakePools(count, offset, includeMetadata);
+            var (total, from, stakePools) = await this._cardanoAPI.ListStakePools(epochNumber, count, offset, includeMetadata);
 
             return new ListStakePoolsResponse
             {

@@ -29,6 +29,11 @@ namespace Silvestre.Cardano.Integration.DbSyncAPI
             return EpochQueries.GetCurrentEpoch(this.GetConnection());
         }
 
+        public Task<Epoch> GetEpoch(uint epochNumber)
+        {
+            return EpochQueries.GetEpoch(this.GetConnection(), epochNumber);
+        }
+
         public Task<Block> GetLatestBlock(uint epochNumber)
         {
             return BlockQueries.GetLatestBlockForEpoch(this.GetConnection(), epochNumber);
@@ -39,9 +44,9 @@ namespace Silvestre.Cardano.Integration.DbSyncAPI
             return BlockQueries.GetLatestBlock(this.GetConnection());
         }
 
-        public Task<(ulong Total, IEnumerable<StakePool> StakePools)> ListStakePools(uint offset = 0, uint limit = 100)
+        public Task<(ulong Total, IEnumerable<StakePool> StakePools)> ListStakePools(uint? epochNumber = null, uint offset = 0, uint limit = 100)
         {
-            return StakePoolQueries.ListStakePools(this.GetConnection(), offset, limit);
+            return StakePoolQueries.ListStakePools(this.GetConnection(), epochNumber, offset, limit);
         }
 
         public Task<StakePool> GetStakePool(string poolAddress)
@@ -52,6 +57,16 @@ namespace Silvestre.Cardano.Integration.DbSyncAPI
         public Task<IEnumerable<TransactionOutput>> GetTransactionOutput(string transactionId)
         {
             return TransactionQueries.GetTransactionOutputs(this.GetConnection(), transactionId);
+        }
+
+        public Task<IEnumerable<BlockDetail>> GetEpochBlocks(uint epochNumber)
+        {
+            return BlockQueries.GetEpochBlocks(this.GetConnection(), epochNumber);
+        }
+
+        public Task<EpochStatistics> GetEpochStatistics(uint epochNumber)
+        {
+            return  EpochQueries.GetEpochStatistics(this.GetConnection(), epochNumber);
         }
     }
 }

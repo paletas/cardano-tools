@@ -48,9 +48,12 @@ namespace Silvestre.Cardano.Integration.CardanoAPI.Services.DbSync
             return streamingResponse.ResponseStream.ReadAllAsync(cancellationToken);
         }
 
-        public async Task<ListStakePoolsReply> ListStakePools(uint offset = 0, uint limit = 100)
+        public async Task<ListStakePoolsReply> ListStakePools(uint? epochNumber = null, uint offset = 0, uint limit = 100)
         {
-            return await this._stakePoolsClient.ListStakePoolsAsync(new ListStakePoolsRequest { Offset = offset, Limit = limit }).ResponseAsync.ConfigureAwait(false);
+            if (epochNumber == null)
+                return await this._stakePoolsClient.ListStakePoolsAsync(new ListStakePoolsRequest { Offset = offset, Limit = limit }).ResponseAsync.ConfigureAwait(false);
+            else
+                return await this._stakePoolsClient.ListStakePoolsByEpochAsync(new ListStakePoolsByEpochRequest { EpochNumber = epochNumber.Value, Offset = offset, Limit = limit }).ResponseAsync.ConfigureAwait(false);
         }
 
         public async Task<StakePool> GetStakePool(string poolAddress)
@@ -63,6 +66,24 @@ namespace Silvestre.Cardano.Integration.CardanoAPI.Services.DbSync
         {
             var response = await this._transactionsClient.GetTransactionDetailsAsync(new GetTransactionDetailsRequest { TransactionHashId = transactionAddress }).ResponseAsync.ConfigureAwait(false);
             return response.Transaction;
+        }
+
+        public async Task<IEnumerable<BlockDetail>> GetBlocks(uint epochNumber)
+        {
+            var response = await this._blocksClient.GetBlocksAsync(new GetBlocksRequest { EpochNumber = epochNumber }).ResponseAsync.ConfigureAwait(false);
+            return response.Blocks;
+        }
+        
+        public async Task<Epoch> GetEpoch(uint epochNumber)
+        {
+            var response = await this._epochsClient.GetEpochAsync(new GetEpochRequest { EpochNumber = epochNumber }).ResponseAsync.ConfigureAwait(false);
+            return response.Epoch;
+        }
+
+        public async Task<EpochStatistics> GetEpochStatistics(uint epochNumber)
+        {
+            var response = await this._epochsClient.GetEpochStatisticsAsync(new GetEpochStatisticsRequest { EpochNumber = epochNumber }).ResponseAsync.ConfigureAwait(false);
+            return response.Statistics;
         }
     }
 }

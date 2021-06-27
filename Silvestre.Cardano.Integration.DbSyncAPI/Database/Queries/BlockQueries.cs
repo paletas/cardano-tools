@@ -1,39 +1,59 @@
 ﻿using Dapper;
 using Silvestre.Cardano.Integration.DbSyncAPI.Database.Model;
+using System.Collections.Generic;
 using System.Data.Common;
 using System.Threading.Tasks;
 
 namespace Silvestre.Cardano.Integration.DbSyncAPI.Database.Queries
 {
-    internal static class BlockQueries
-    {
-        public static async Task<Block> GetLatestBlockForEpoch(this DbConnection sqlConnection, uint epochNumber)
-        {
-            const string QueryString =
-                @"SELECT id as Id, hash as Hash, epoch_no as EpochNumber, slot_no as SlotNumber, epoch_slot_no as EpochSlotNumber, block_no as BlockNumber, previous_id  as PreviousID, slot_leader_id as SlotLeaderId, size as Size, ""time"" as Timestamp
-                FROM public.block
-                WHERE epoch_no = @EpochNumber
-                ORDER BY id DESC
-                LIMIT 1";
+	internal static class BlockQueries
+	{
+		public static async Task<Block> GetLatestBlockForEpoch(this DbConnection sqlConnection, uint epochNumber)
+		{
+			const string QueryString =
+				@"SELECT block.id as Id, block.hash as Hash, block.epoch_no as EpochNumber, block.slot_no as SlotNumber, block.epoch_slot_no as EpochSlotNumber, block.block_no as BlockNumber, block.previous_id as PreviousID, block.slot_leader_id as SlotLeaderId, block.size as Size, block.""time"" as Timestamp, block.tx_count TransactionCount
+				FROM public.block
+				WHERE epoch_no = @EpochNumber
+				ORDER BY id DESC
+				LIMIT 1";
 
-            var blockData = await sqlConnection.QuerySingleAsync<Block>(QueryString, new { EpochNumber = (long) epochNumber }, commandType: System.Data.CommandType.Text).ConfigureAwait(false);
-            blockData.Timestamp = blockData.Timestamp.ToUniversalTime();
+			var blockData = await sqlConnection.QuerySingleAsync<Block>(QueryString, new { EpochNumber = (long)epochNumber }, commandType: System.Data.CommandType.Text).ConfigureAwait(false);
+			blockData.Timestamp = blockData.Timestamp.ToUniversalTime();
 
-            return blockData;
-        }
+			return blockData;
+		}
 
-        public static async Task<Block> GetLatestBlock(this DbConnection sqlConnection)
-        {
-            const string QueryString =
-                @"SELECT id as Id, hash as Hash, epoch_no as EpochNumber, slot_no as SlotNumber, epoch_slot_no as EpochSlotNumber, block_no as BlockNumber, previous_id  as PreviousID, slot_leader_id as SlotLeaderId, size as Size, ""time"" as Timestamp
-                FROM public.block
-                ORDER BY id DESC
-                LIMIT 1";
+		public static async Task<Block> GetLatestBlock(this DbConnection sqlConnection)
+		{
+			const string QueryString =
+				@"SELECT block.id as Id, block.hash as Hash, block.epoch_no as EpochNumber, block.slot_no as SlotNumber, block.epoch_slot_no as EpochSlotNumber, block.block_no as BlockNumber, block.previous_id as PreviousID, block.slot_leader_id as SlotLeaderId, block.size as Size, block.""time"" as Timestamp, block.tx_count TransactionCount
+				FROM public.block
+				ORDER BY id DESC
+				LIMIT 1";
 
-            var blockData = await sqlConnection.QuerySingleAsync<Block>(QueryString, commandType: System.Data.CommandType.Text).ConfigureAwait(false);
-            blockData.Timestamp = blockData.Timestamp.ToUniversalTime();
+			var blockData = await sqlConnection.QuerySingleAsync<Block>(QueryString, commandType: System.Data.CommandType.Text).ConfigureAwait(false);
+			blockData.Timestamp = blockData.Timestamp.ToUniversalTime();
 
-            return blockData;
-        }
-    }
+			return blockData;
+		}
+
+		public static async Task<IEnumerable<BlockDetail>> GetEpochBlocks(this DbConnection sqlConnection, uint epochNumber)
+		{
+			const string QueryString =
+				@"SELECT block.id as Id, block.hash as Hash, block.epoch_no as EpochNumber, block.slot_no as SlotNumber, block.epoch_slot_no as EpochSlotNumber, block.block_no as BlockNumber, block.previous_id as PreviousID, block.slot_leader_id as SlotLeaderId, block.size as Size, block.""time"" as Timestamp, block.tx_count TransactionCount, SUM(tx.fee) TotalFees, SUM(tx.out_sum) TotalOutSum
+				FROM public.block LEFT JOIN public.tx
+						ON block.id = tx.block_id
+				WHERE block.epoch_no = @EpochNumber
+				GROUP BY block.id, block.hash, block.epoch_no, block.slot_no, block.epoch_slot_no, block.block_no, block.previous_id, block.slot_leader_id, block.size, block.time, block.tx_count
+				ORDER BY time ASC";
+
+			var epochBlocks = await sqlConnection.QueryAsync<BlockDetail>(QueryString, new { EpochNumber = (long) epochNumber }).ConfigureAwait(false);
+			foreach (var block in epochBlocks)
+            {
+				block.Timestamp = block.Timestamp.ToUniversalTime();
+            }
+
+			return epochBlocks;
+		}
+	}
 }

@@ -7,9 +7,12 @@ package cardanodbsyncapi;
 
 //Services
 ///Epochs
-
 service Epochs {
   rpc GetCurrentEpoch (CurrentEpochRequest) returns (CurrentEpochReply);
+
+  rpc GetEpoch (GetEpochRequest) returns (GetEpochReply);
+
+  rpc GetEpochStatistics (GetEpochStatisticsRequest) returns (GetEpochStatisticsReply);
 }
 
 message CurrentEpochRequest {
@@ -20,12 +23,29 @@ message CurrentEpochReply {
   Epoch Epoch = 1;
 }
 
+message GetEpochRequest {
+  uint32 EpochNumber = 1;
+}
+
+message GetEpochReply {
+  Epoch Epoch = 1;
+}
+
+message GetEpochStatisticsRequest {
+  uint32 EpochNumber = 1;
+}
+
+message GetEpochStatisticsReply {
+  EpochStatistics Statistics = 1;
+}
+
 ///Blocks
-
 service Blocks {
-	rpc GetLatestBlock (LatestBlockRequest) returns (LatestBlockReply);
+  rpc GetLatestBlock (LatestBlockRequest) returns (LatestBlockReply);
 
-	rpc BlockUpdates (BlockUpdatesRequest) returns (stream Block);
+  rpc BlockUpdates (BlockUpdatesRequest) returns (stream Block);
+
+  rpc GetBlocks (GetBlocksRequest) returns (GetBlocksReply);
 }
 
 message LatestBlockRequest {
@@ -40,9 +60,19 @@ message BlockUpdatesRequest {
 	uint32 DelayUpdatesMillisecond = 1;
 }
 
+message GetBlocksRequest {
+  uint32 EpochNumber = 1;
+}
+
+message GetBlocksReply {
+  repeated BlockDetail Blocks = 1;
+}
+
 /// Stake Pools
 service StakePools {
 	rpc ListStakePools (ListStakePoolsRequest) returns (ListStakePoolsReply);
+
+	rpc ListStakePoolsByEpoch (ListStakePoolsByEpochRequest) returns (ListStakePoolsReply);
 
 	rpc GetStakePool (GetStakePoolRequest) returns (GetStakePoolReply);
 }
@@ -50,6 +80,12 @@ service StakePools {
 message ListStakePoolsRequest {
 	uint32 Offset = 1;
 	uint32 Limit = 2;
+}
+
+message ListStakePoolsByEpochRequest {
+	uint32 EpochNumber = 1;
+	uint32 Offset = 2;
+	uint32 Limit = 3;
 }
 
 message ListStakePoolsReply {
@@ -85,7 +121,6 @@ message Int128 {
 	bytes Value = 1;
 }
 
-
 message Epoch {
    uint32 Number = 1;
    uint32 TransactionCount = 2;
@@ -94,6 +129,17 @@ message Epoch {
    Int128 OutSum = 5;
    google.protobuf.Timestamp StartTime = 6;
    google.protobuf.Timestamp EndTime = 7;
+}
+
+message EpochStatistics {
+   uint32 Number = 1;
+   uint64 TotalStakePools = 2;
+   uint64 TotalDelegations = 3;
+   uint64 CirculatingSupply = 4;
+   uint64 DelegatedSupply = 5;
+   uint64 Rewards = 6;
+   uint64 OrphanedRewards = 7;
+   bool RewardsCalculated = 8;
 }
 
 message Block {
@@ -106,6 +152,13 @@ message Block {
 	int64 SlotLeader = 7;
 	uint32 Size = 8;
 	google.protobuf.Timestamp Timestamp = 9;
+	uint64 TransactionCount = 10;
+}
+
+message BlockDetail {
+	Block Block = 1;
+	uint64 TotalFees = 2;
+	Int128 TotalOutSum = 3;
 }
 
 message StakePool {
@@ -115,7 +168,8 @@ message StakePool {
 	float Margin = 4;
 	uint64 FixedCost = 5;
 	string MetadataUrl = 6;
-	uint32 RetiringEpoch = 7;
+	uint64 Delegation = 7;
+	uint32 RetiringEpoch = 8;
 }
 
 message Transaction {	

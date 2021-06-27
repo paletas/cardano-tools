@@ -3,7 +3,7 @@
 
 @section Scripts
 {
-<script type="text/javascript" src="~/js/pages/transaction-viewer.js"> </script>
+<script type="text/javascript" src="~/js/pages/transactions.js"> </script>
 }
 
 <div class="bg-white shadow overflow-hidden sm:rounded-lg" x-data="transactionViewer()" x-init="fetchTransaction('@Model.TransactionId')">
@@ -44,21 +44,21 @@
 							<dt class="text-sm font-medium text-gray-500">
 								Total Spent
 							</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-4" x-text="`₳${transaction.fees + transaction.transactionOutputTotal} (ADA)`">
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-4" x-text="`${numeral(transaction.fees + transaction.transactionOutputTotal).format(jcardano.constants.formats.ada)} (ADA)`">
 							</dd>
 						</div>
 						<div class="bg-white px-4 py-5 sm:grid sm:grid-cols-5 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">
 								Total Sent
 							</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-4" x-text="`₳${transaction.transactionOutputTotal} (ADA)`">
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-4" x-text="`${numeral(transaction.transactionOutputTotal).format(jcardano.constants.formats.ada)} (ADA)`">
 							</dd>
 						</div>
 						<div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-5 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">
 								Fees
 							</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-4" x-text="`₳${transaction.fees} (ADA)`">
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-4" x-text="`${numeral(transaction.fees).format(jcardano.constants.formats.ada)} (ADA)`">
 							</dd>
 						</div>
 						<template x-if="transaction.metadata !== undefined && transaction.metadata.length > 0">

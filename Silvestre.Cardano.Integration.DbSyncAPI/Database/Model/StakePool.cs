@@ -16,6 +16,8 @@
 
         public uint RetiringEpoch { get; set; }
 
+        public ulong Delegation { get; set; }
+
         public ulong TotalStakePools { get; set; }
     }
 }

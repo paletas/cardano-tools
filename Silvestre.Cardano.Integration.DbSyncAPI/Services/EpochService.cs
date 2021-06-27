@@ -35,5 +35,44 @@ namespace Silvestre.Cardano.Integration.DbSyncAPI.Services
                 }
             };
         }
+
+        public override async Task<GetEpochReply> GetEpoch(GetEpochRequest request, ServerCallContext context)
+        {
+            var epoch = await this._databaseProxy.GetEpoch(request.EpochNumber).ConfigureAwait(false);
+
+            return new GetEpochReply
+            {
+                Epoch = new Epoch
+                {
+                    Number = epoch.Number,
+                    StartTime = epoch.StartTime.ToTimestamp(),
+                    EndTime = epoch.EndTime.ToTimestamp(),
+                    TransactionCount = epoch.TransactionCount,
+                    BlockCount = epoch.BlockCount,
+                    Fees = epoch.Fees,
+                    OutSum = epoch.OutSum.ToInt128()
+                }
+            };
+        }
+
+        public override async Task<GetEpochStatisticsReply> GetEpochStatistics(GetEpochStatisticsRequest request, ServerCallContext context)
+        {
+            var epochStatistics = await this._databaseProxy.GetEpochStatistics(request.EpochNumber).ConfigureAwait(false);
+
+            return new GetEpochStatisticsReply
+            {
+                Statistics = new EpochStatistics
+                {
+                    Number = epochStatistics.EpochNumber,
+                    CirculatingSupply = epochStatistics.CirculatingSupply,
+                    DelegatedSupply = epochStatistics.DelegatedSupply,
+                    Rewards = epochStatistics.Rewards ?? 0,
+                    OrphanedRewards = epochStatistics.OprhanedRewards ?? 0,
+                    RewardsCalculated = epochStatistics.Rewards.HasValue || epochStatistics.OprhanedRewards.HasValue,
+                    TotalStakePools = epochStatistics.TotalStakePools,
+                    TotalDelegations =  epochStatistics.TotalDelegations
+                }
+            };
+        }
     }
 }

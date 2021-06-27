@@ -24,3 +24,12 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 });
+
+var jcardano = {
+    constants: {
+        formats: {
+            ada: '₳0.[000000]a',
+            percentage: '0.00%'
+        }
+    }
+}

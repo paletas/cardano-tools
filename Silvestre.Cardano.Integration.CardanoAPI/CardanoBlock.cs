@@ -22,4 +22,11 @@ namespace Silvestre.Cardano.Integration.CardanoAPI
 
         public DateTime Timestamp { get; set; }
     }
+
+    public class CardanoBlockDetail : CardanoBlock
+    {
+        public CardanoAsset AmountTransacted { get; set; }
+
+        public CardanoAsset Fees { get; set; }
+    }
 }
