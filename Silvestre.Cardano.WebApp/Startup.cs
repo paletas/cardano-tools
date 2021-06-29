@@ -28,7 +28,7 @@ namespace Silvestre.Cardano.WebApp
             services.AddControllers();
             services.AddSignalR();
 
-            services.AddSingleton<CardanoAPI>(new CardanoAPI(Configuration.GetSection("Cardano")["GraphQL"], Configuration.GetSection("Cardano")["DbSync"]));
+            services.AddSingleton<CardanoAPI>(new CardanoAPI(Configuration.GetSection("Cardano")["DbSync"]));
             services.AddSingleton<Hub<IBlocksHubClient>, BlocksHub>();
             services.AddApplicationInsightsTelemetry(Configuration["APPINSIGHTS_CONNECTIONSTRING"]);
         }

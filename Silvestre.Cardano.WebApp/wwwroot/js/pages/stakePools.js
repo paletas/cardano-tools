@@ -1,4 +1,4 @@
-﻿function listStakePools(stakePoolsPerPage) {
+﻿function listStakePools(stakePoolsPerPage, epochNumber) {
     function stakePool(servicePool, fetchMetadata) {
         return {
             poolAddress: servicePool.poolAddress,
@@ -16,6 +16,13 @@
         };
     }
 
+    function getAddress(epochNumber, quantity, offset) {
+        var address = `/api/v1/stakepool?count=${quantity}&offset=${offset}`;
+        if (epochNumber !== undefined && epochNumber !== null)
+            address += `&epoch=${epochNumber}`;
+        return address;
+    }
+
     return {
         isLoading: false,
         initialized: false,
@@ -31,7 +38,7 @@
             this.isLoading = true;
             var offset = this.quantityPerPage * (page - 1);
 
-            fetch(`/api/v1/stakepool?count=${this.quantityPerPage}&offset=${offset}`)
+            fetch(getAddress(epochNumber, this.quantityPerPage, offset))
                 .then(result => {
                     if (result.ok) return result.json();
                     else {

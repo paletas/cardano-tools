@@ -1,5 +1,4 @@
 ﻿using Silvestre.Cardano.Integration.CardanoAPI.Services.DbSync;
-using Silvestre.Cardano.Integration.CardanoAPI.Services.GraphAPI;
 using Silvestre.Cardano.Integration.CardanoAPI.Services.Metadata;
 using System;
 using System.Collections.Generic;
@@ -12,16 +11,14 @@ namespace Silvestre.Cardano.Integration.CardanoAPI
     public class CardanoAPI
     {
         private MetadataAPI _metadataAPI;
-        private GraphAPI _graphAPI;
         private DbSyncAPI _dbSyncAPI;
 
-        public CardanoAPI(string graphEndpoint, string dbSyncEndpoint) : this(new Uri(graphEndpoint), new Uri(dbSyncEndpoint))
+        public CardanoAPI(string dbSyncEndpoint) : this(new Uri(dbSyncEndpoint))
         { }
 
-        public CardanoAPI(Uri graphEndpoint, Uri dbSyncEndpoint)
+        public CardanoAPI(Uri dbSyncEndpoint)
         {
             _metadataAPI = new MetadataAPI();
-            _graphAPI = new GraphAPI(graphEndpoint);
             _dbSyncAPI = new DbSyncAPI(dbSyncEndpoint);
         }
 
@@ -35,11 +32,27 @@ namespace Silvestre.Cardano.Integration.CardanoAPI
                 epoch.Number,
                 epoch.TransactionCount,
                 epoch.BlockCount,
-                epoch.OutSum.ToInt128(),
+                new CardanoAsset(epoch.OutSum.ToDecimal(CardanoAsset.ADA_DECIMALPOINTER), CardanoAsset.ADA_UNIT),
                 new CardanoAsset(epoch.Fees, CardanoAsset.ADA_DECIMALPOINTER, CardanoAsset.ADA_UNIT),
                 epoch.StartTime.ToDateTime(),
                 epoch.EndTime.ToDateTime(),
                 latestBlock.EpochSlotNumber
+            );
+        }
+
+        public async Task<CardanoEpoch> GetEpoch(uint epochNumber)
+        {
+            var epoch = await _dbSyncAPI.GetEpoch(epochNumber).ConfigureAwait(false);
+
+            return new CardanoEpoch(
+                CardanoEra.MaryEra,
+                epoch.Number,
+                epoch.TransactionCount,
+                epoch.BlockCount,
+                new CardanoAsset(epoch.OutSum.ToDecimal(CardanoAsset.ADA_DECIMALPOINTER), CardanoAsset.ADA_UNIT),
+                new CardanoAsset(epoch.Fees, CardanoAsset.ADA_DECIMALPOINTER, CardanoAsset.ADA_UNIT),
+                epoch.StartTime.ToDateTime(),
+                epoch.EndTime.ToDateTime()
             );
         }
 
@@ -59,9 +72,9 @@ namespace Silvestre.Cardano.Integration.CardanoAPI
             });
         }
 
-        public async Task<(ulong Total, ulong From, IEnumerable<CardanoStakePool> StakePools)> ListStakePools(uint count, uint offset = 0, bool includeMetadata = false)
+        public async Task<(ulong Total, ulong From, IEnumerable<CardanoStakePool> StakePools)> ListStakePools(uint? epochNumber, uint count, uint offset = 0, bool includeMetadata = false)
         {
-            var stakePoolsReply = await _dbSyncAPI.ListStakePools(offset, count);
+            var stakePoolsReply = await _dbSyncAPI.ListStakePools(epochNumber, offset, count);
             var stakePools = new List<CardanoStakePool>(stakePoolsReply.StakePools.Count);
 
             foreach (var stakePool in stakePoolsReply.StakePools)
@@ -73,6 +86,7 @@ namespace Silvestre.Cardano.Integration.CardanoAPI
                     Margin = new CardanoAsset((decimal)stakePool.Margin, CardanoAsset.PERCENTAGE_UNIT),
                     Maintenance = new CardanoAsset(stakePool.FixedCost, CardanoAsset.ADA_DECIMALPOINTER, CardanoAsset.ADA_UNIT),
                     Pledge = new CardanoAsset(stakePool.Pledge, CardanoAsset.ADA_DECIMALPOINTER, CardanoAsset.ADA_UNIT),
+                    Delegation = new CardanoAsset(stakePool.Delegation, CardanoAsset.ADA_DECIMALPOINTER, CardanoAsset.ADA_UNIT)
                 });
             }
 
@@ -109,7 +123,8 @@ namespace Silvestre.Cardano.Integration.CardanoAPI
                 PoolAddress = new CardanoAddress(stakePool.PoolAddress, CardanoAddress.AddressKindEnum.StakePool),
                 Margin = new CardanoAsset((decimal)stakePool.Margin, CardanoAsset.PERCENTAGE_UNIT),
                 Maintenance = new CardanoAsset(stakePool.FixedCost, CardanoAsset.ADA_DECIMALPOINTER, CardanoAsset.ADA_UNIT),
-                Pledge = new CardanoAsset(stakePool.Pledge, CardanoAsset.ADA_DECIMALPOINTER, CardanoAsset.ADA_UNIT)
+                Pledge = new CardanoAsset(stakePool.Pledge, CardanoAsset.ADA_DECIMALPOINTER, CardanoAsset.ADA_UNIT),
+                Delegation = new CardanoAsset(stakePool.Delegation, CardanoAsset.ADA_DECIMALPOINTER, CardanoAsset.ADA_UNIT)
             };
         }
 
@@ -151,6 +166,44 @@ namespace Silvestre.Cardano.Integration.CardanoAPI
                 TransactionInId = transaction.TransactionInId,
                 Metadata = transaction.Metadata.Select(metadata => new CardanoTransactionMetadata { MetadataKey = metadata.Key, MetadataJson = metadata.Json }).ToArray(),
                 Output = transaction.Output.Select(output => new CardanoTransactionOutput { AddressTo = output.Address, Output = new CardanoAsset(output.Amount, CardanoAsset.ADA_DECIMALPOINTER, CardanoAsset.ADA_UNIT) }).ToArray()
+            };
+        }
+
+        public async Task<IEnumerable<CardanoBlockDetail>> GetEpochBlocks(uint epochNumber)
+        {
+            var blocks = await _dbSyncAPI.GetBlocks(epochNumber).ConfigureAwait(false);
+
+            return blocks.Select(b =>
+                new CardanoBlockDetail
+                {
+                    Hash = b.Block.Hash,
+                    EpochNumber = b.Block.EpochNumber,
+                    EpochSlotNumber = b.Block.EpochSlotNumber,
+                    SlotNumber = b.Block.SlotNumber,
+                    BlockNumber = b.Block.BlockNumber,
+                    PreviousID = b.Block.PreviousID,
+                    Size = b.Block.Size,
+                    SlotLeader = b.Block.SlotLeader,
+                    AmountTransacted = new CardanoAsset(b.TotalOutSum.ToDecimal(CardanoAsset.ADA_DECIMALPOINTER), CardanoAsset.ADA_UNIT),
+                    Fees = new CardanoAsset(b.TotalFees, CardanoAsset.ADA_DECIMALPOINTER, CardanoAsset.ADA_UNIT),
+                    Timestamp = b.Block.Timestamp.ToDateTime()
+                }
+            ).ToArray();
+        }
+
+        public async Task<CardanoEpochStatistics> GetEpochStatistics(uint epochNumber)
+        {
+            var epochStatistics = await _dbSyncAPI.GetEpochStatistics(epochNumber).ConfigureAwait(false);
+
+            return new CardanoEpochStatistics
+            {
+                EpochNumber = epochStatistics.Number,
+                CirculatingSupply = new CardanoAsset(epochStatistics.CirculatingSupply, CardanoAsset.ADA_DECIMALPOINTER, CardanoAsset.ADA_UNIT),
+                DelegatedSupply = new CardanoAsset(epochStatistics.DelegatedSupply, CardanoAsset.ADA_DECIMALPOINTER, CardanoAsset.ADA_UNIT),
+                Rewards = epochStatistics.RewardsCalculated ? new CardanoAsset(epochStatistics.Rewards, CardanoAsset.ADA_DECIMALPOINTER, CardanoAsset.ADA_UNIT) : null,
+                OrphanedRewards = epochStatistics.RewardsCalculated ? new CardanoAsset(epochStatistics.OrphanedRewards, CardanoAsset.ADA_DECIMALPOINTER, CardanoAsset.ADA_UNIT) : null,
+                TotalStakePools = epochStatistics.TotalStakePools,
+                TotalDelegations =  epochStatistics.TotalDelegations
             };
         }
     }

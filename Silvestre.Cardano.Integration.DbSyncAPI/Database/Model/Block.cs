@@ -23,5 +23,7 @@ namespace Silvestre.Cardano.Integration.DbSyncAPI.Database.Model
         public uint Size { get; set; }
 
         public DateTime Timestamp { get; set; }
+
+        public ulong TransactionCount { get; set; }
     }
 }

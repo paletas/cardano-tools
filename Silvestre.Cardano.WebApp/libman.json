@@ -22,6 +22,18 @@
       "provider": "unpkg",
       "library": "alpine-magic-helpers@1.2.2",
       "destination": "wwwroot/lib/alpine-magic-helpers/"
+    },
+    {
+      "library": "apexcharts@3.26.3",
+      "destination": "wwwroot/lib/apexcharts/"
+    },
+    {
+      "library": "lodash.js@4.17.21",
+      "destination": "wwwroot/lib/lodash/"
+    },
+    {
+      "library": "numeral.js@2.0.6",
+      "destination": "wwwroot/lib/numeral/"
     }
   ]
 }

@@ -1,5 +1,5 @@
 ﻿using Silvestre.Cardano.Integration.CardanoAPI;
-using Silvestre.Cardano.WebApp.API.ServiceModel.StakePools;
+using Silvestre.Cardano.WebApp.API.ServiceModel.StakePool;
 
 namespace Silvestre.Cardano.WebApp.API
 {
@@ -18,7 +18,8 @@ namespace Silvestre.Cardano.WebApp.API
                 PoolAddress = stakePool.PoolAddress.Address,
                 MarginPercentage = stakePool.Margin.Quantity,
                 MaintenanceInADA = stakePool.Maintenance.Quantity,
-                PledgeInADA = stakePool.Pledge.Quantity
+                PledgeInADA = stakePool.Pledge.Quantity,
+                DelegationInADA = stakePool.Delegation.Quantity
             };
         }
 

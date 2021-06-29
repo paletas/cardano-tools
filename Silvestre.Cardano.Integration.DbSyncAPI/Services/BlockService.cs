@@ -3,6 +3,7 @@ using Grpc.Core;
 using Microsoft.Extensions.Logging;
 using Silvestre.Cardano.Integration.DbSync.Services;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Silvestre.Cardano.Integration.DbSyncAPI.Services
@@ -57,12 +58,40 @@ namespace Silvestre.Cardano.Integration.DbSyncAPI.Services
                         Size = latestBlock.Size,
                         SlotLeader = latestBlock.SlotLeaderId,
                         PreviousID = latestBlock.PreviousID,
-                        Timestamp = latestBlock.Timestamp.ToTimestamp()
+                        Timestamp = latestBlock.Timestamp.ToTimestamp(),
+                        TransactionCount = latestBlock.TransactionCount
                     });
                 }
 
                 await Task.Delay((int) request.DelayUpdatesMillisecond);
             }
+        }
+
+        public override async Task<GetBlocksReply> GetBlocks(GetBlocksRequest request, ServerCallContext context)
+        {
+            var epochBlocks = await this._databaseProxy.GetEpochBlocks(request.EpochNumber).ConfigureAwait(false);
+
+            var reply = new GetBlocksReply();
+            reply.Blocks.AddRange(epochBlocks.Select(b => new BlockDetail
+            {
+                Block = new Block
+                {
+                    Hash = BitConverter.ToString(b.Hash),
+                    BlockNumber = b.BlockNumber,
+                    EpochNumber = b.EpochNumber,
+                    EpochSlotNumber = b.EpochSlotNumber,
+                    SlotNumber = b.SlotNumber,
+                    Size = b.Size,
+                    SlotLeader = b.SlotLeaderId,
+                    PreviousID = b.PreviousID,
+                    Timestamp = b.Timestamp.ToTimestamp(),
+                    TransactionCount = b.TransactionCount
+                },
+                TotalFees = b.TotalFees,
+                TotalOutSum = b.TotalOutSum.ToInt128()
+            }));
+
+            return reply;
         }
     }
 }
