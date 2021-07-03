@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Grpc.Core;
+using Microsoft.AspNetCore.Mvc;
 using Silvestre.Cardano.Integration.CardanoAPI;
 using Silvestre.Cardano.WebApp.API.ServiceModel.Epoch;
 using System.Threading.Tasks;
@@ -37,37 +38,55 @@ namespace Silvestre.Cardano.WebApp.API
         }
 
         [HttpGet("{epochNumber}")]
-        public async Task<Epoch> GetEpoch([FromRoute] uint epochNumber)
+        public async Task<IActionResult> GetEpoch([FromRoute] uint epochNumber)
         {
-            var epoch = await this._cardanoAPI.GetEpoch(epochNumber).ConfigureAwait(false);
-
-            return new Epoch
+            try
             {
-                Number = epoch.Number,
-                StartTime = epoch.StartTime,
-                EndTime = epoch.EndTime,
-                TransactionsCount = epoch.TransactionsCount,
-                BlocksCount = epoch.BlockCount,
-                MaximumSlots = epoch.MaxSlots,
-                TransactionsTotal = epoch.TransactionsTotal.Quantity,
-                FeesTotal = epoch.Fees.Quantity
-            };
+                var epoch = await this._cardanoAPI.GetEpoch(epochNumber).ConfigureAwait(false);
+
+                return new JsonResult(new Epoch
+                {
+                    Number = epoch.Number,
+                    StartTime = epoch.StartTime,
+                    EndTime = epoch.EndTime,
+                    TransactionsCount = epoch.TransactionsCount,
+                    BlocksCount = epoch.BlockCount,
+                    MaximumSlots = epoch.MaxSlots,
+                    TransactionsTotal = epoch.TransactionsTotal.Quantity,
+                    FeesTotal = epoch.Fees.Quantity
+                });
+            }
+            catch (RpcException ex) when (ex.StatusCode == Grpc.Core.StatusCode.NotFound)
+            {
+                return new NotFoundResult();
+            }
         }
 
-        [HttpGet("{epochNumber}/statistics")]
-        public async Task<EpochStatistics> GetEpochStatistics([FromRoute] uint epochNumber)
+        [HttpGet("{epochNumber}/statistics/delegation")]
+        public async Task<EpochDelegationStatistics> GetEpochDelegationStatistics([FromRoute] uint epochNumber)
         {
-            var epochStatistics = await this._cardanoAPI.GetEpochStatistics(epochNumber).ConfigureAwait(false);
+            var epochStatistics = await this._cardanoAPI.GetEpochDelegationStatistics(epochNumber).ConfigureAwait(false);
 
-            return new EpochStatistics
+            return new EpochDelegationStatistics
             {
                 EpochNumber = epochStatistics.EpochNumber,
                 TotalStakePools = epochStatistics.TotalStakePools,
                 TotalDelegations = epochStatistics.TotalDelegations,
-                CirculatingSupply = epochStatistics.CirculatingSupply.Quantity,
-                StakedSupply = epochStatistics.DelegatedSupply.Quantity,
                 Rewards = epochStatistics.Rewards?.Quantity,
                 OrphanedRewards = epochStatistics.OrphanedRewards?.Quantity
+            };
+        }
+
+        [HttpGet("{epochNumber}/statistics/supply")]
+        public async Task<EpochSupplyStatistics> GetEpochSupplyStatistics([FromRoute] uint epochNumber)
+        {
+            var epochStatistics = await this._cardanoAPI.GetEpochSupplyStatistics(epochNumber).ConfigureAwait(false);
+
+            return new EpochSupplyStatistics
+            {
+                EpochNumber = epochStatistics.EpochNumber,
+                CirculatingSupply = epochStatistics.CirculatingSupply.Quantity,
+                StakedSupply = epochStatistics.StakedSupply.Quantity
             };
         }
     }

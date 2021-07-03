@@ -1,5 +1,5 @@
 ﻿function epochViewer() {
-    function epoch(serviceEpoch) {
+    function Epoch(serviceEpoch) {
         return {
             number: serviceEpoch.number,
             startedAt: serviceEpoch.startTime,
@@ -11,21 +11,26 @@
         };
     }
 
-    function epochStatistics(serviceStatistics) {
+    function EpochDelegationStatistics(serviceStatistics) {
         return {
             totalStakePools: serviceStatistics.totalStakePools,
             totalDelegations: serviceStatistics.totalDelegations,
-            circulatingSupply: serviceStatistics.circulatingSupply,
-            stakedSupply: serviceStatistics.stakedSupply,
             rewards: serviceStatistics.rewards,
             orphanedRewards: serviceStatistics.orphanedRewards
         };
     }
 
+    function EpochSupplyStatistics(serviceStatistics) {
+        return {
+            circulatingSupply: serviceStatistics.circulatingSupply,
+            stakedSupply: serviceStatistics.stakedSupply
+        };
+    }
+
     return {
+        initialized: false,
         epoch: {
             isLoading: false,
-            initialized: false,
             errors: {
                 fetching: false,
                 any: function () {
@@ -33,28 +38,43 @@
                     return t.fetching;
                 }
             },
+            notFound: false,
             data: undefined
         },
         epochStatistics: {
-            isLoading: false,
-            initialized: false,
-            errors: {
-                fetching: false,
-                any: function () {
-                    var t = this;
-                    return t.fetching;
-                }
+            delegation: {
+                isLoading: false,
+                errors: {
+                    fetching: false,
+                    any: function () {
+                        var t = this;
+                        return t.fetching;
+                    }
+                },
+                data: undefined
             },
-            data: undefined
+            supply: {
+                isLoading: false,
+                errors: {
+                    fetching: false,
+                    any: function () {
+                        var t = this;
+                        return t.fetching;
+                    }
+                },
+                data: undefined
+            }
         },
-        initialize(epochNumber) {
-            this.fetchEpoch(epochNumber);
-            this.fetchEpochStatistics(epochNumber);
+        initialize: async function (epochNumber) {
+            await this.fetchEpoch(epochNumber);
+            if (this.epoch.notFound === false) this.fetchEpochStatistics(epochNumber);
+
+            this.initialized = true;
         },
-        fetchEpoch(epochNumber) {
+        fetchEpoch: async function(epochNumber) {
             this.epoch.isLoading = true;
 
-            fetch(`/api/v1/epoch/${epochNumber}`)
+            await fetch(`/api/v1/epoch/${epochNumber}`)
                 .then(result => {
                     if (result.ok) {
                         if (result === undefined) {
@@ -65,7 +85,10 @@
                         }
                     }
                     else {
-                        if (result.status !== 404) {
+                        if (result.status === 404) {
+                            this.epoch.notFound = true;
+                        }
+                        else {
                             this.epoch.errors.fetching = true;
                         }
                         return undefined;
@@ -73,17 +96,17 @@
                 })
                 .then(data => {
                     if (data !== undefined) {
-                        this.epoch.data = new epoch(data);
+                        this.epoch.data = new Epoch(data);
                     }
 
                     this.epoch.isLoading = false;
-                    this.epoch.initialized = true;
                 });
         },
-        fetchEpochStatistics(epochNumber) {
-            this.epochStatistics.isLoading = true;
+        fetchEpochStatistics (epochNumber) {
+            this.epochStatistics.delegation.isLoading = true;
+            this.epochStatistics.supply.isLoading = true;
 
-            fetch(`/api/v1/epoch/${epochNumber}/statistics`)
+            fetch(`/api/v1/epoch/${epochNumber}/statistics/delegation`)
                 .then(result => {
                     if (result.ok) {
                         if (result === undefined) {
@@ -95,18 +118,42 @@
                     }
                     else {
                         if (result.status !== 404) {
-                            this.epochStatistics.errors.fetching = true;
+                            this.epochStatistics.delegation.errors.fetching = true;
                         }
                         return undefined;
                     }
                 })
                 .then(data => {
                     if (data !== undefined) {
-                        this.epochStatistics.data = new epochStatistics(data);
+                        this.epochStatistics.delegation.data = new EpochDelegationStatistics(data);
                     }
 
-                    this.epochStatistics.isLoading = false;
-                    this.epochStatistics.initialized = true;
+                    this.epochStatistics.delegation.isLoading = false;
+                });
+
+            fetch(`/api/v1/epoch/${epochNumber}/statistics/supply`)
+                .then(result => {
+                    if (result.ok) {
+                        if (result === undefined) {
+                            return undefined;
+                        }
+                        else {
+                            return result.json();
+                        }
+                    }
+                    else {
+                        if (result.status !== 404) {
+                            this.epochStatistics.supply.errors.fetching = true;
+                        }
+                        return undefined;
+                    }
+                })
+                .then(data => {
+                    if (data !== undefined) {
+                        this.epochStatistics.supply.data = new EpochSupplyStatistics(data);
+                    }
+
+                    this.epochStatistics.supply.isLoading = false;
                 });
         }
     };

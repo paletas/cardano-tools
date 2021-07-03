@@ -2,7 +2,7 @@
 
 namespace Silvestre.Cardano.WebApp.API.ServiceModel.Epoch
 {
-    public class EpochStatistics
+    public class EpochDelegationStatistics
     {
         [JsonPropertyName("epochNumber")]
         public ulong EpochNumber { get; set; }
@@ -12,12 +12,6 @@ namespace Silvestre.Cardano.WebApp.API.ServiceModel.Epoch
 
         [JsonPropertyName("totalDelegations")]
         public ulong TotalDelegations { get; set; }
-
-        [JsonPropertyName("circulatingSupply")]
-        public decimal CirculatingSupply { get; set; }
-
-        [JsonPropertyName("stakedSupply")]
-        public decimal StakedSupply { get; set; }
 
         [JsonPropertyName("rewards")]
         public decimal? Rewards { get; set; }

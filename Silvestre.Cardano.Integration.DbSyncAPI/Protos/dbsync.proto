@@ -12,7 +12,9 @@ service Epochs {
 
   rpc GetEpoch (GetEpochRequest) returns (GetEpochReply);
 
-  rpc GetEpochStatistics (GetEpochStatisticsRequest) returns (GetEpochStatisticsReply);
+  rpc GetEpochDelegationStatistics (GetEpochDelegationStatisticsRequest) returns (GetEpochDelegationStatisticsReply);
+
+  rpc GetEpochSupplyStatistics (GetEpochSupplyStatisticsRequest) returns (GetEpochSupplyStatisticsReply);
 }
 
 message CurrentEpochRequest {
@@ -31,12 +33,27 @@ message GetEpochReply {
   Epoch Epoch = 1;
 }
 
-message GetEpochStatisticsRequest {
+message GetEpochDelegationStatisticsRequest {
   uint32 EpochNumber = 1;
 }
 
-message GetEpochStatisticsReply {
-  EpochStatistics Statistics = 1;
+message GetEpochDelegationStatisticsReply {
+   uint32 EpochNumber = 1;
+   uint64 TotalStakePools = 2;
+   uint64 TotalDelegations = 3;
+   uint64 Rewards = 4;
+   uint64 OrphanedRewards = 5;
+   bool RewardsCalculated = 6;
+}
+
+message GetEpochSupplyStatisticsRequest {
+  uint32 EpochNumber = 1;
+}
+
+message GetEpochSupplyStatisticsReply {
+   uint32 EpochNumber = 1;
+   uint64 CirculatingSupply = 2;
+   uint64 DelegatedSupply = 3;
 }
 
 ///Blocks
@@ -129,17 +146,6 @@ message Epoch {
    Int128 OutSum = 5;
    google.protobuf.Timestamp StartTime = 6;
    google.protobuf.Timestamp EndTime = 7;
-}
-
-message EpochStatistics {
-   uint32 Number = 1;
-   uint64 TotalStakePools = 2;
-   uint64 TotalDelegations = 3;
-   uint64 CirculatingSupply = 4;
-   uint64 DelegatedSupply = 5;
-   uint64 Rewards = 6;
-   uint64 OrphanedRewards = 7;
-   bool RewardsCalculated = 8;
 }
 
 message Block {

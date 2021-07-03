@@ -191,20 +191,14 @@ namespace Silvestre.Cardano.Integration.CardanoAPI
             ).ToArray();
         }
 
-        public async Task<CardanoEpochStatistics> GetEpochStatistics(uint epochNumber)
+        public async Task<CardanoEpochStakePoolStatistics> GetEpochDelegationStatistics(uint epochNumber)
         {
-            var epochStatistics = await _dbSyncAPI.GetEpochStatistics(epochNumber).ConfigureAwait(false);
+            return await _dbSyncAPI.GetEpochDelegationStatistics(epochNumber).ConfigureAwait(false);
+        }
 
-            return new CardanoEpochStatistics
-            {
-                EpochNumber = epochStatistics.Number,
-                CirculatingSupply = new CardanoAsset(epochStatistics.CirculatingSupply, CardanoAsset.ADA_DECIMALPOINTER, CardanoAsset.ADA_UNIT),
-                DelegatedSupply = new CardanoAsset(epochStatistics.DelegatedSupply, CardanoAsset.ADA_DECIMALPOINTER, CardanoAsset.ADA_UNIT),
-                Rewards = epochStatistics.RewardsCalculated ? new CardanoAsset(epochStatistics.Rewards, CardanoAsset.ADA_DECIMALPOINTER, CardanoAsset.ADA_UNIT) : null,
-                OrphanedRewards = epochStatistics.RewardsCalculated ? new CardanoAsset(epochStatistics.OrphanedRewards, CardanoAsset.ADA_DECIMALPOINTER, CardanoAsset.ADA_UNIT) : null,
-                TotalStakePools = epochStatistics.TotalStakePools,
-                TotalDelegations =  epochStatistics.TotalDelegations
-            };
+        public async Task<CardanoEpochSupplyStatistics> GetEpochSupplyStatistics(uint epochNumber)
+        {
+            return await _dbSyncAPI.GetEpochSupplyStatistics(epochNumber).ConfigureAwait(false);
         }
     }
 }

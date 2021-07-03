@@ -29,20 +29,22 @@ namespace Silvestre.Cardano.Integration.DbSyncAPI.Database.Queries
                 FROM public.epoch
                 WHERE no = @EpochNumber";
 
-            var epochData = await sqlConnection.QuerySingleAsync<Epoch>(QueryString, new { EpochNumber = (long) epochNumber }, commandType: System.Data.CommandType.Text).ConfigureAwait(false);
-            epochData.StartTime = epochData.StartTime.ToUniversalTime();
+            var epochData = await sqlConnection.QuerySingleOrDefaultAsync<Epoch>(QueryString, new { EpochNumber = (long) epochNumber }, commandType: System.Data.CommandType.Text).ConfigureAwait(false);
+			if (epochData == default(Epoch)) return null;
+
+			epochData.StartTime = epochData.StartTime.ToUniversalTime();
             epochData.EndTime = epochData.EndTime.ToUniversalTime();
 
             return epochData;
         }
 
-        public static async Task<EpochStatistics> GetEpochStatistics(this DbConnection sqlConnection, uint epochNumber)
+        public static async Task<EpochStatistics> GetEpochDelegationStatistics(this DbConnection sqlConnection, uint epochNumber)
         {
             const string QueryString =
-                @"SELECT epoch.no AS EpochNumber, delegation.delegated_total AS TotalDelegations, delegation.delegated_supply AS DelegatedSupply, stakepools.total AS TotalStakePools, rewards.orphanedrewards_total AS OrphanedRewards, rewards.rewards_total AS Rewards, onchain.current_supply AS CirculatingSupply
+                @"SELECT epoch.no AS EpochNumber, delegation.delegated_total AS TotalDelegations, stakepools.total AS TotalStakePools, rewards.orphanedrewards_total AS OrphanedRewards, rewards.rewards_total AS Rewards
                 FROM public.epoch 
 	                INNER JOIN LATERAL (
-		                SELECT SUM(amount) delegated_supply, COUNT(addr_id) delegated_total
+		                SELECT COUNT(addr_id) delegated_total
 		                FROM public.epoch_stake
 		                WHERE epoch.no = epoch_stake.epoch_no
 	                ) delegation ON TRUE
@@ -58,6 +60,21 @@ namespace Silvestre.Cardano.Integration.DbSyncAPI.Database.Queries
 		                FROM public.reward, public.orphaned_reward
 		                WHERE orphaned_reward.epoch_no = epoch.no OR reward.epoch_no = epoch.no
 	                ) rewards ON TRUE
+                WHERE epoch.no = @EpochNumber";
+
+            return await sqlConnection.QuerySingleAsync<EpochStatistics>(QueryString, new { EpochNumber = (long)epochNumber }, commandType: System.Data.CommandType.Text).ConfigureAwait(false);
+		}
+
+		public static async Task<EpochStatistics> GetEpochCirculationStatistics(this DbConnection sqlConnection, uint epochNumber)
+		{
+			const string QueryString =
+				@"SELECT epoch.no AS EpochNumber, delegation.delegated_supply AS DelegatedSupply, onchain.current_supply AS CirculatingSupply
+                FROM public.epoch 
+	                INNER JOIN LATERAL (
+		                SELECT SUM(amount) delegated_supply
+		                FROM public.epoch_stake
+		                WHERE epoch.no = epoch_stake.epoch_no
+	                ) delegation ON TRUE
 	                INNER JOIN LATERAL (
 		                SELECT SUM(value) as current_supply 
 		                FROM public.epoch AS txout_epoch
@@ -76,7 +93,7 @@ namespace Silvestre.Cardano.Integration.DbSyncAPI.Database.Queries
 	                ) onchain ON TRUE
                 WHERE epoch.no = @EpochNumber";
 
-            return await sqlConnection.QuerySingleAsync<EpochStatistics>(QueryString, new { EpochNumber = (long)epochNumber }, commandType: System.Data.CommandType.Text).ConfigureAwait(false);
-        }
-    }
+			return await sqlConnection.QuerySingleAsync<EpochStatistics>(QueryString, new { EpochNumber = (long)epochNumber }, commandType: System.Data.CommandType.Text).ConfigureAwait(false);
+		}
+	}
 }
