@@ -23,6 +23,11 @@ namespace Silvestre.Cardano.Integration.CardanoAPI.Services.DbSync
         {
             this._baseAddress = baseAddress;
 
+            var grpcOptions = new GrpcChannelOptions
+            {
+                HttpClient = new System.Net.Http.HttpClient { BaseAddress = baseAddress, Timeout = TimeSpan.FromMinutes(5) }
+            };
+
             this._epochsClient = new Epochs.EpochsClient(GrpcChannel.ForAddress(baseAddress));
             this._blocksClient = new Blocks.BlocksClient(GrpcChannel.ForAddress(baseAddress));
             this._stakePoolsClient = new StakePools.StakePoolsClient(GrpcChannel.ForAddress(baseAddress));
