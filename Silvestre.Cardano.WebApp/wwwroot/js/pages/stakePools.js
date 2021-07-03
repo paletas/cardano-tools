@@ -6,7 +6,7 @@
             name: servicePool.name,
             website: servicePool.websiteUrl,
             maintenanceCost: servicePool.maintenanceCostInADA,
-            marginPercentage: servicePool.marginPercentage * 100,
+            marginPercentage: servicePool.marginPercentage,
             pledge: servicePool.pledgeInADA,
             delegation: servicePool.delegatedInADA,
             isLoading: false,

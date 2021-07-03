@@ -57,6 +57,8 @@
                     }
                     else {
                         this.epoch = epoch(data.number, data.blockCount, data.currentSlotNumber, data.maximumSlots, data.endTime);
+                        Alpine.store('currentEpoch', this.epoch);
+
                         this.initialized = true;
                     }
                 });

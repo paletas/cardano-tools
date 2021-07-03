@@ -73,17 +73,35 @@ namespace Silvestre.Cardano.Integration.CardanoAPI.Services.DbSync
             var response = await this._blocksClient.GetBlocksAsync(new GetBlocksRequest { EpochNumber = epochNumber }).ResponseAsync.ConfigureAwait(false);
             return response.Blocks;
         }
-        
+
         public async Task<Epoch> GetEpoch(uint epochNumber)
         {
             var response = await this._epochsClient.GetEpochAsync(new GetEpochRequest { EpochNumber = epochNumber }).ResponseAsync.ConfigureAwait(false);
             return response.Epoch;
         }
 
-        public async Task<EpochStatistics> GetEpochStatistics(uint epochNumber)
+        public async Task<CardanoEpochStakePoolStatistics> GetEpochDelegationStatistics(uint epochNumber)
         {
-            var response = await this._epochsClient.GetEpochStatisticsAsync(new GetEpochStatisticsRequest { EpochNumber = epochNumber }).ResponseAsync.ConfigureAwait(false);
-            return response.Statistics;
+            var response = await this._epochsClient.GetEpochDelegationStatisticsAsync(new GetEpochDelegationStatisticsRequest { EpochNumber = epochNumber }).ResponseAsync.ConfigureAwait(false);
+            return new CardanoEpochStakePoolStatistics
+            {
+                EpochNumber = response.EpochNumber,
+                TotalDelegations = response.TotalDelegations,
+                TotalStakePools = response.TotalStakePools,
+                Rewards = response.RewardsCalculated ? new CardanoAsset(response.Rewards, CardanoAsset.ADA_DECIMALPOINTER, CardanoAsset.ADA_UNIT) : null,
+                OrphanedRewards = response.RewardsCalculated ? new CardanoAsset(response.OrphanedRewards, CardanoAsset.ADA_DECIMALPOINTER, CardanoAsset.ADA_UNIT) : null
+            };
+        }
+
+        public async Task<CardanoEpochSupplyStatistics> GetEpochSupplyStatistics(uint epochNumber)
+        {
+            var response = await this._epochsClient.GetEpochSupplyStatisticsAsync(new GetEpochSupplyStatisticsRequest { EpochNumber = epochNumber }).ResponseAsync.ConfigureAwait(false);
+            return new CardanoEpochSupplyStatistics
+            {
+                EpochNumber = response.EpochNumber,
+                CirculatingSupply = new CardanoAsset(response.CirculatingSupply, CardanoAsset.ADA_DECIMALPOINTER, CardanoAsset.ADA_UNIT),
+                StakedSupply = new CardanoAsset(response.DelegatedSupply, CardanoAsset.ADA_DECIMALPOINTER, CardanoAsset.ADA_UNIT)
+            };
         }
     }
 }

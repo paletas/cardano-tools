@@ -64,9 +64,14 @@ namespace Silvestre.Cardano.Integration.DbSyncAPI
             return BlockQueries.GetEpochBlocks(this.GetConnection(), epochNumber);
         }
 
-        public Task<EpochStatistics> GetEpochStatistics(uint epochNumber)
+        public Task<EpochStatistics> GetEpochDelegationStatistics(uint epochNumber)
         {
-            return  EpochQueries.GetEpochStatistics(this.GetConnection(), epochNumber);
+            return  EpochQueries.GetEpochDelegationStatistics(this.GetConnection(), epochNumber);
+        }
+
+        public Task<EpochStatistics> GetEpochCirculationStatistics(uint epochNumber)
+        {
+            return EpochQueries.GetEpochCirculationStatistics(this.GetConnection(), epochNumber);
         }
     }
 }

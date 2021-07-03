@@ -39,6 +39,8 @@ namespace Silvestre.Cardano.Integration.DbSyncAPI.Services
         public override async Task<GetEpochReply> GetEpoch(GetEpochRequest request, ServerCallContext context)
         {
             var epoch = await this._databaseProxy.GetEpoch(request.EpochNumber).ConfigureAwait(false);
+            if (epoch == null)
+                throw new RpcException(new Status(StatusCode.NotFound, "Epoch not found"), new Metadata { { "EpochNumber", request.EpochNumber.ToString() } });
 
             return new GetEpochReply
             {
@@ -55,23 +57,30 @@ namespace Silvestre.Cardano.Integration.DbSyncAPI.Services
             };
         }
 
-        public override async Task<GetEpochStatisticsReply> GetEpochStatistics(GetEpochStatisticsRequest request, ServerCallContext context)
+        public override async Task<GetEpochDelegationStatisticsReply> GetEpochDelegationStatistics(GetEpochDelegationStatisticsRequest request, ServerCallContext context)
         {
-            var epochStatistics = await this._databaseProxy.GetEpochStatistics(request.EpochNumber).ConfigureAwait(false);
+            var epochStatistics = await this._databaseProxy.GetEpochDelegationStatistics(request.EpochNumber).ConfigureAwait(false);
 
-            return new GetEpochStatisticsReply
+            return new GetEpochDelegationStatisticsReply
             {
-                Statistics = new EpochStatistics
-                {
-                    Number = epochStatistics.EpochNumber,
-                    CirculatingSupply = epochStatistics.CirculatingSupply,
-                    DelegatedSupply = epochStatistics.DelegatedSupply,
-                    Rewards = epochStatistics.Rewards ?? 0,
-                    OrphanedRewards = epochStatistics.OprhanedRewards ?? 0,
-                    RewardsCalculated = epochStatistics.Rewards.HasValue || epochStatistics.OprhanedRewards.HasValue,
-                    TotalStakePools = epochStatistics.TotalStakePools,
-                    TotalDelegations =  epochStatistics.TotalDelegations
-                }
+                EpochNumber = epochStatistics.EpochNumber,
+                Rewards = epochStatistics.Rewards ?? 0,
+                OrphanedRewards = epochStatistics.OprhanedRewards ?? 0,
+                RewardsCalculated = epochStatistics.Rewards.HasValue || epochStatistics.OprhanedRewards.HasValue,
+                TotalStakePools = epochStatistics.TotalStakePools,
+                TotalDelegations = epochStatistics.TotalDelegations
+            };
+        }
+
+        public override async Task<GetEpochSupplyStatisticsReply> GetEpochSupplyStatistics(GetEpochSupplyStatisticsRequest request, ServerCallContext context)
+        {
+            var epochStatistics = await this._databaseProxy.GetEpochCirculationStatistics(request.EpochNumber).ConfigureAwait(false);
+
+            return new GetEpochSupplyStatisticsReply
+            {
+                EpochNumber = epochStatistics.EpochNumber,
+                CirculatingSupply = epochStatistics.CirculatingSupply,
+                DelegatedSupply = epochStatistics.DelegatedSupply
             };
         }
     }
