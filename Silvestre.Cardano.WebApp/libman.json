@@ -3,7 +3,7 @@
   "defaultProvider": "cdnjs",
   "libraries": [
     {
-      "library": "alpinejs@2.8.2",
+      "library": "alpinejs@3.2.1",
       "destination": "wwwroot/lib/alpinejs/"
     },
     {
@@ -11,17 +11,12 @@
       "destination": "wwwroot/lib/moment.js/"
     },
     {
-      "library": "microsoft-signalr@5.0.5",
+      "library": "microsoft-signalr@5.0.7",
       "destination": "wwwroot/lib/microsoft-signalr/"
     },
     {
       "library": "require.js@2.3.6",
       "destination": "wwwroot/lib/require.js/"
-    },
-    {
-      "provider": "unpkg",
-      "library": "alpine-magic-helpers@1.2.2",
-      "destination": "wwwroot/lib/alpine-magic-helpers/"
     },
     {
       "library": "apexcharts@3.26.3",

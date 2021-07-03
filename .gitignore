@@ -362,4 +362,6 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /config/network/mainnet-example
+
+# Cardano Silvestre
 /.ssh

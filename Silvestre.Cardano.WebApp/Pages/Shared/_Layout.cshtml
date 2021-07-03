@@ -20,8 +20,8 @@
                     <div class="flex-1 justify-between hidden lg:block w-max">
                         <div class="ml-10 flex-initial flex items-baseline space-x-4">
                             <a href="/" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Home</a>
-                            <a href="/stakepool" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Stake Pools</a>
                             <a href="/epoch" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Epochs</a>
+                            <a href="/stakepool" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Stake Pools</a>
                         </div>
                     </div>
 
@@ -82,8 +82,8 @@
                 </div>
                 <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
                 <a href="/" class="bg-gray-900 text-white block px-3 py-2 rounded-md text-base font-medium">Home</a>
-                <a href="/stakepool" class="bg-gray-900 text-white block px-3 py-2 rounded-md text-base font-medium">Stake Pools</a>
                 <a href="/epoch" class="bg-gray-900 text-white block px-3 py-2 rounded-md text-base font-medium">Epochs</a>
+                <a href="/stakepool" class="bg-gray-900 text-white block px-3 py-2 rounded-md text-base font-medium">Stake Pools</a>
             </div>
 
             <template x-if="initialized">
@@ -143,13 +143,12 @@
     <footer class="bg-white border-2 pt-2 fixed bottom-0 left-0">
         <CultureSelector />
     </footer>
-
-    <script src="~/lib/alpine-magic-helpers/dist/component.js" asp-append-version="true"></script>
-    <script src="~/lib/alpinejs/alpine.js" asp-append-version="true"></script>
-    <script src="~/lib/moment.js/moment.js" asp-append-version="true"></script>
-    <script src="~/lib/microsoft-signalr/signalr.js" asp-append-version="true"></script>
-    <script src="~/lib/apexcharts/apexcharts.js" asp-append-version="true"></script>
-    <script src="~/lib/lodash/lodash.js" asp-append-version="true"></script>
+    
+    <script defer src="~/lib/alpinejs/cdn.min.js" asp-append-version="true"></script>
+    <script src="~/lib/moment.js/moment.min.js" asp-append-version="true"></script>
+    <script src="~/lib/microsoft-signalr/signalr.min.js" asp-append-version="true"></script>
+    <script src="~/lib/apexcharts/apexcharts.min.js" asp-append-version="true"></script>
+    <script src="~/lib/lodash/lodash.min.js" asp-append-version="true"></script>
     <script src="~/lib/numeral/numeral.min.js" asp-append-version="true"></script>
 
     <script src="~/js/components/pagination.js" asp-append-version="true"></script>
