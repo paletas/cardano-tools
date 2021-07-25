@@ -2,13 +2,14 @@
 using Silvestre.Cardano.Integration.DbSyncAPI.Database.Model;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Silvestre.Cardano.Integration.DbSyncAPI.Database.Queries
 {
 	internal static class BlockQueries
 	{
-		public static async Task<Block> GetLatestBlockForEpoch(this DbConnection sqlConnection, uint epochNumber)
+		public static async Task<Block> GetLatestBlockForEpoch(this DbConnection sqlConnection, CancellationToken cancellationToken, uint epochNumber)
 		{
 			const string QueryString =
 				@"SELECT block.id as Id, block.hash as Hash, block.epoch_no as EpochNumber, block.slot_no as SlotNumber, block.epoch_slot_no as EpochSlotNumber, block.block_no as BlockNumber, block.previous_id as PreviousID, block.slot_leader_id as SlotLeaderId, block.size as Size, block.""time"" as Timestamp, block.tx_count TransactionCount
@@ -17,13 +18,14 @@ namespace Silvestre.Cardano.Integration.DbSyncAPI.Database.Queries
 				ORDER BY id DESC
 				LIMIT 1";
 
-			var blockData = await sqlConnection.QuerySingleAsync<Block>(QueryString, new { EpochNumber = (long)epochNumber }, commandType: System.Data.CommandType.Text).ConfigureAwait(false);
+			var blockCommand = new CommandDefinition(QueryString, new { EpochNumber = (long)epochNumber }, commandType: System.Data.CommandType.Text, cancellationToken: cancellationToken);
+			var blockData = await sqlConnection.QuerySingleAsync<Block>(blockCommand).ConfigureAwait(false);
 			blockData.Timestamp = blockData.Timestamp.ToUniversalTime();
 
 			return blockData;
 		}
 
-		public static async Task<Block> GetLatestBlock(this DbConnection sqlConnection)
+		public static async Task<Block> GetLatestBlock(this DbConnection sqlConnection, CancellationToken cancellationToken)
 		{
 			const string QueryString =
 				@"SELECT block.id as Id, block.hash as Hash, block.epoch_no as EpochNumber, block.slot_no as SlotNumber, block.epoch_slot_no as EpochSlotNumber, block.block_no as BlockNumber, block.previous_id as PreviousID, block.slot_leader_id as SlotLeaderId, block.size as Size, block.""time"" as Timestamp, block.tx_count TransactionCount
@@ -31,13 +33,14 @@ namespace Silvestre.Cardano.Integration.DbSyncAPI.Database.Queries
 				ORDER BY id DESC
 				LIMIT 1";
 
-			var blockData = await sqlConnection.QuerySingleAsync<Block>(QueryString, commandType: System.Data.CommandType.Text).ConfigureAwait(false);
+			var blockCommand = new CommandDefinition(QueryString, commandType: System.Data.CommandType.Text, cancellationToken: cancellationToken);
+			var blockData = await sqlConnection.QuerySingleAsync<Block>(blockCommand).ConfigureAwait(false);
 			blockData.Timestamp = blockData.Timestamp.ToUniversalTime();
 
 			return blockData;
 		}
 
-		public static async Task<IEnumerable<BlockDetail>> GetEpochBlocks(this DbConnection sqlConnection, uint epochNumber)
+		public static async Task<IEnumerable<BlockDetail>> GetEpochBlocks(this DbConnection sqlConnection, CancellationToken cancellationToken, uint epochNumber)
 		{
 			const string QueryString =
 				@"SELECT block.id as Id, block.hash as Hash, block.epoch_no as EpochNumber, block.slot_no as SlotNumber, block.epoch_slot_no as EpochSlotNumber, block.block_no as BlockNumber, block.previous_id as PreviousID, block.slot_leader_id as SlotLeaderId, block.size as Size, block.""time"" as Timestamp, block.tx_count TransactionCount, SUM(tx.fee) TotalFees, SUM(tx.out_sum) TotalOutSum
@@ -47,7 +50,8 @@ namespace Silvestre.Cardano.Integration.DbSyncAPI.Database.Queries
 				GROUP BY block.id, block.hash, block.epoch_no, block.slot_no, block.epoch_slot_no, block.block_no, block.previous_id, block.slot_leader_id, block.size, block.time, block.tx_count
 				ORDER BY time ASC";
 
-			var epochBlocks = await sqlConnection.QueryAsync<BlockDetail>(QueryString, new { EpochNumber = (long) epochNumber }).ConfigureAwait(false);
+			var blockCommand = new CommandDefinition(QueryString, new { EpochNumber = (long)epochNumber }, commandType: System.Data.CommandType.Text, cancellationToken: cancellationToken);
+			var epochBlocks = await sqlConnection.QueryAsync<BlockDetail>(blockCommand).ConfigureAwait(false);
 			foreach (var block in epochBlocks)
             {
 				block.Timestamp = block.Timestamp.ToUniversalTime();

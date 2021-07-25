@@ -2,14 +2,14 @@
 using Silvestre.Cardano.Integration.DbSyncAPI.Database.Model;
 using System.Collections.Generic;
 using System.Data.Common;
-using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Silvestre.Cardano.Integration.DbSyncAPI.Database.Queries
 {
     internal static class TransactionQueries
     {
-        public static async Task<IEnumerable<TransactionOutput>> GetTransactionOutputs(this DbConnection sqlConnection, string transactionId)
+        public static async Task<IEnumerable<TransactionOutput>> GetTransactionOutputs(this DbConnection sqlConnection, CancellationToken cancellationToken, string transactionId)
         {
             const string QueryString =
                 @"SELECT tx.id TransactionId, encode(tx.hash, 'hex') TransactionHash, 
@@ -30,7 +30,8 @@ namespace Silvestre.Cardano.Integration.DbSyncAPI.Database.Queries
 						ON tx.id = withdrawal.tx_id
 				WHERE tx.hash = decode(@TransactionId, 'hex')";
 
-            var transactionData = await sqlConnection.QueryAsync<TransactionOutput>(QueryString, new { TransactionId = transactionId }, commandType: System.Data.CommandType.Text).ConfigureAwait(false);
+			var transactionCommand = new CommandDefinition(QueryString, new { TransactionId = transactionId }, commandType: System.Data.CommandType.Text, cancellationToken: cancellationToken);
+			var transactionData = await sqlConnection.QueryAsync<TransactionOutput>(transactionCommand).ConfigureAwait(false);
 
             foreach (var transaction in transactionData)
             {

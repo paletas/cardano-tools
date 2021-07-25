@@ -20,7 +20,7 @@ namespace Silvestre.Cardano.Integration.DbSyncAPI.Services
 
         public override async Task<ListStakePoolsReply> ListStakePools(ListStakePoolsRequest request, ServerCallContext context)
         {
-            var listStakePools = await _databaseProxy.ListStakePools(offset: request.Offset, limit: request.Limit).ConfigureAwait(false);
+            var listStakePools = await _databaseProxy.ListStakePools(context.CancellationToken, offset: request.Offset, limit: request.Limit).ConfigureAwait(false);
 
             var reply = new ListStakePoolsReply { Total = listStakePools.Total, From = request.Offset };
             reply.StakePools.AddRange(listStakePools.StakePools.Select(stakePool => new StakePool
@@ -33,8 +33,7 @@ namespace Silvestre.Cardano.Integration.DbSyncAPI.Services
                 Delegation = stakePool.Delegation,
 
                 MetadataUrl = stakePool.MetadataUrl,
-                ActiveSinceEpoch = stakePool.ActiveSinceEpochNumber,
-                RetiringEpoch = stakePool.RetiringEpoch
+                ActiveSinceEpoch = stakePool.ActiveSinceEpochNumber
             }));
 
             return reply;
@@ -42,7 +41,7 @@ namespace Silvestre.Cardano.Integration.DbSyncAPI.Services
 
         public override async Task<ListStakePoolsReply> ListStakePoolsByEpoch(ListStakePoolsByEpochRequest request, ServerCallContext context)
         {
-            var listStakePools = await _databaseProxy.ListStakePools(request.EpochNumber, request.Offset, request.Limit).ConfigureAwait(false);
+            var listStakePools = await _databaseProxy.ListStakePools(context.CancellationToken, request.EpochNumber, request.Offset, request.Limit).ConfigureAwait(false);
 
             var reply = new ListStakePoolsReply { Total = listStakePools.Total, From = request.Offset };
             reply.StakePools.AddRange(listStakePools.StakePools.Select(stakePool => new StakePool
@@ -55,8 +54,7 @@ namespace Silvestre.Cardano.Integration.DbSyncAPI.Services
                 Delegation = stakePool.Delegation,
 
                 MetadataUrl = stakePool.MetadataUrl,
-                ActiveSinceEpoch = stakePool.ActiveSinceEpochNumber,
-                RetiringEpoch = stakePool.RetiringEpoch
+                ActiveSinceEpoch = stakePool.ActiveSinceEpochNumber
             }));
 
             return reply;
@@ -64,7 +62,7 @@ namespace Silvestre.Cardano.Integration.DbSyncAPI.Services
 
         public override async Task<GetStakePoolReply> GetStakePool(GetStakePoolRequest request, ServerCallContext context)
         {
-            var stakePool = await _databaseProxy.GetStakePool(request.PoolAddress).ConfigureAwait(false);
+            var stakePool = await _databaseProxy.GetStakePool(context.CancellationToken, request.PoolAddress).ConfigureAwait(false);
 
             var reply = new GetStakePoolReply();
 
@@ -80,8 +78,7 @@ namespace Silvestre.Cardano.Integration.DbSyncAPI.Services
                     Delegation = stakePool.Delegation,
 
                     MetadataUrl = stakePool.MetadataUrl,
-                    ActiveSinceEpoch = stakePool.ActiveSinceEpochNumber,
-                    RetiringEpoch = stakePool.RetiringEpoch
+                    ActiveSinceEpoch = stakePool.ActiveSinceEpochNumber
                 };
             }
 

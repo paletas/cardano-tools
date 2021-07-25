@@ -17,7 +17,6 @@ namespace Silvestre.Cardano.WebApp.API
             this._cardanoAPI = cardanoAPI;
         }
 
-
         [HttpGet]
         public async Task<CurrentEpoch> GetCurrentEpoch()
         {

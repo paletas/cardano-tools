@@ -170,12 +170,11 @@ message BlockDetail {
 message StakePool {
 	string PoolAddress = 1;
 	uint64 Pledge = 2;
-	uint32 ActiveSinceEpoch = 3;
-	float Margin = 4;
+	uint64 ActiveSinceEpoch = 3;
+	double Margin = 4;
 	uint64 FixedCost = 5;
 	string MetadataUrl = 6;
 	uint64 Delegation = 7;
-	uint32 RetiringEpoch = 8;
 }
 
 message Transaction {	

@@ -19,7 +19,7 @@ namespace Silvestre.Cardano.Integration.DbSyncAPI.Services
 
         public override async Task<CurrentEpochReply> GetCurrentEpoch(CurrentEpochRequest request, ServerCallContext context)
         {
-            var currentEpoch = await this._databaseProxy.GetCurrentEpoch().ConfigureAwait(false);
+            var currentEpoch = await this._databaseProxy.GetCurrentEpoch(context.CancellationToken).ConfigureAwait(false);
 
             return new CurrentEpochReply
             {
@@ -38,7 +38,7 @@ namespace Silvestre.Cardano.Integration.DbSyncAPI.Services
 
         public override async Task<GetEpochReply> GetEpoch(GetEpochRequest request, ServerCallContext context)
         {
-            var epoch = await this._databaseProxy.GetEpoch(request.EpochNumber).ConfigureAwait(false);
+            var epoch = await this._databaseProxy.GetEpoch(context.CancellationToken, request.EpochNumber).ConfigureAwait(false);
             if (epoch == null)
                 throw new RpcException(new Status(StatusCode.NotFound, "Epoch not found"), new Metadata { { "EpochNumber", request.EpochNumber.ToString() } });
 
@@ -59,7 +59,7 @@ namespace Silvestre.Cardano.Integration.DbSyncAPI.Services
 
         public override async Task<GetEpochDelegationStatisticsReply> GetEpochDelegationStatistics(GetEpochDelegationStatisticsRequest request, ServerCallContext context)
         {
-            var epochStatistics = await this._databaseProxy.GetEpochDelegationStatistics(request.EpochNumber).ConfigureAwait(false);
+            var epochStatistics = await this._databaseProxy.GetEpochDelegationStatistics(context.CancellationToken, request.EpochNumber).ConfigureAwait(false);
 
             return new GetEpochDelegationStatisticsReply
             {
@@ -74,7 +74,7 @@ namespace Silvestre.Cardano.Integration.DbSyncAPI.Services
 
         public override async Task<GetEpochSupplyStatisticsReply> GetEpochSupplyStatistics(GetEpochSupplyStatisticsRequest request, ServerCallContext context)
         {
-            var epochStatistics = await this._databaseProxy.GetEpochCirculationStatistics(request.EpochNumber).ConfigureAwait(false);
+            var epochStatistics = await this._databaseProxy.GetEpochCirculationStatistics(context.CancellationToken, request.EpochNumber).ConfigureAwait(false);
 
             return new GetEpochSupplyStatisticsReply
             {

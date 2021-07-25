@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Silvestre.Cardano.Integration.DbSyncAPI.Database;
 using Silvestre.Cardano.Integration.DbSyncAPI.Services;
 
 namespace Silvestre.Cardano.Integration.DbSyncAPI
@@ -33,6 +34,7 @@ namespace Silvestre.Cardano.Integration.DbSyncAPI
                 app.UseDeveloperExceptionPage();
             }
 
+            app.SetupDatabase();
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>

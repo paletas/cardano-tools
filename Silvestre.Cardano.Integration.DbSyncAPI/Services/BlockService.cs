@@ -21,7 +21,7 @@ namespace Silvestre.Cardano.Integration.DbSyncAPI.Services
 
         public override async Task<LatestBlockReply> GetLatestBlock(LatestBlockRequest request, ServerCallContext context)
         {
-            var latestBlock = await this._databaseProxy.GetLatestBlock(request.EpochNumber).ConfigureAwait(false);
+            var latestBlock = await this._databaseProxy.GetLatestBlock(context.CancellationToken, request.EpochNumber).ConfigureAwait(false);
 
             return new LatestBlockReply
             {
@@ -45,7 +45,7 @@ namespace Silvestre.Cardano.Integration.DbSyncAPI.Services
             Database.Model.Block lastBlockSent = null;
             while (context.CancellationToken.IsCancellationRequested == false)
             {
-                var latestBlock = await this._databaseProxy.GetLatestBlock().ConfigureAwait(false);
+                var latestBlock = await this._databaseProxy.GetLatestBlock(context.CancellationToken).ConfigureAwait(false);
                 if (lastBlockSent == null || lastBlockSent.BlockNumber < latestBlock.BlockNumber)
                 {
                     await responseStream.WriteAsync(new Block
@@ -69,7 +69,7 @@ namespace Silvestre.Cardano.Integration.DbSyncAPI.Services
 
         public override async Task<GetBlocksReply> GetBlocks(GetBlocksRequest request, ServerCallContext context)
         {
-            var epochBlocks = await this._databaseProxy.GetEpochBlocks(request.EpochNumber).ConfigureAwait(false);
+            var epochBlocks = await this._databaseProxy.GetEpochBlocks(context.CancellationToken, request.EpochNumber).ConfigureAwait(false);
 
             var reply = new GetBlocksReply();
             reply.Blocks.AddRange(epochBlocks.Select(b => new BlockDetail

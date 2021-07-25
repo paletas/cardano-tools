@@ -158,7 +158,7 @@
                                                 <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-4" x-show="epochStatistics.delegation.data.rewards === null">
                                                     Not calculated yet
                                                 </dd>
-                                                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-4" x-show="epochStatistics.delegation.data.rewards !== null" x-text="`${numeral(epochStatistics.data.rewards).format(jcardano.constants.formats.ada)} (ADA)`">
+                                                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-4" x-show="epochStatistics.delegation.data.rewards !== null" x-text="`${numeral(epochStatistics.delegation.data.rewards).format(jcardano.constants.formats.ada)} (ADA)`">
                                                     ₳123 (ADA)
                                                 </dd>
                                             </div>
@@ -169,7 +169,7 @@
                                                 <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-4" x-show="epochStatistics.delegation.data.rewards === null">
                                                     Not calculated yet
                                                 </dd>
-                                                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-4" x-show="epochStatistics.delegation.data.rewards !== null" x-text="`${numeral(epochStatistics.data.orphanedRewards).format(jcardano.constants.formats.ada)} (ADA)`">
+                                                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-4" x-show="epochStatistics.delegation.data.rewards !== null" x-text="`${numeral(epochStatistics.delegation.data.orphanedRewards).format(jcardano.constants.formats.ada)} (ADA)`">
                                                     ₳123 (ADA) (100%)
                                                 </dd>
                                             </div>

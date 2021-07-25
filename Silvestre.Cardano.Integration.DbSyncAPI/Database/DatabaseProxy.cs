@@ -2,6 +2,7 @@
 using Silvestre.Cardano.Integration.DbSyncAPI.Database.Queries;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Silvestre.Cardano.Integration.DbSyncAPI
@@ -24,54 +25,64 @@ namespace Silvestre.Cardano.Integration.DbSyncAPI
             return connection;
         }
 
-        public Task<Epoch> GetCurrentEpoch()
+        public Task<bool> RequiresDatabaseUpgrade()
         {
-            return EpochQueries.GetCurrentEpoch(this.GetConnection());
+            return SetupQueries.RequiresUpgradeAsync(GetConnection());
         }
 
-        public Task<Epoch> GetEpoch(uint epochNumber)
+        public Task UpgradeDatabase()
         {
-            return EpochQueries.GetEpoch(this.GetConnection(), epochNumber);
+            return SetupQueries.UpgradeDatabase(GetConnection());
         }
 
-        public Task<Block> GetLatestBlock(uint epochNumber)
+        public Task<Epoch> GetCurrentEpoch(CancellationToken cancellationToken)
         {
-            return BlockQueries.GetLatestBlockForEpoch(this.GetConnection(), epochNumber);
+            return EpochQueries.GetCurrentEpoch(this.GetConnection(), cancellationToken);
         }
 
-        public Task<Block> GetLatestBlock()
+        public Task<Epoch> GetEpoch(CancellationToken cancellationToken, uint epochNumber)
         {
-            return BlockQueries.GetLatestBlock(this.GetConnection());
+            return EpochQueries.GetEpoch(this.GetConnection(), cancellationToken, epochNumber);
         }
 
-        public Task<(ulong Total, IEnumerable<StakePool> StakePools)> ListStakePools(uint? epochNumber = null, uint offset = 0, uint limit = 100)
+        public Task<Block> GetLatestBlock(CancellationToken cancellationToken, uint epochNumber)
         {
-            return StakePoolQueries.ListStakePools(this.GetConnection(), epochNumber, offset, limit);
+            return BlockQueries.GetLatestBlockForEpoch(this.GetConnection(), cancellationToken, epochNumber);
         }
 
-        public Task<StakePool> GetStakePool(string poolAddress)
+        public Task<Block> GetLatestBlock(CancellationToken cancellationToken)
         {
-            return StakePoolQueries.GetStakePool(this.GetConnection(), poolAddress);
+            return BlockQueries.GetLatestBlock(this.GetConnection(), cancellationToken);
         }
 
-        public Task<IEnumerable<TransactionOutput>> GetTransactionOutput(string transactionId)
+        public Task<(ulong Total, IEnumerable<StakePool> StakePools)> ListStakePools(CancellationToken cancellationToken, uint? epochNumber = null, uint offset = 0, uint limit = 100)
         {
-            return TransactionQueries.GetTransactionOutputs(this.GetConnection(), transactionId);
+            return StakePoolQueries.ListStakePools(this.GetConnection(), cancellationToken, epochNumber, offset, limit);
         }
 
-        public Task<IEnumerable<BlockDetail>> GetEpochBlocks(uint epochNumber)
+        public Task<StakePool> GetStakePool(CancellationToken cancellationToken, string poolAddress)
         {
-            return BlockQueries.GetEpochBlocks(this.GetConnection(), epochNumber);
+            return StakePoolQueries.GetStakePool(this.GetConnection(), cancellationToken, poolAddress);
         }
 
-        public Task<EpochStatistics> GetEpochDelegationStatistics(uint epochNumber)
+        public Task<IEnumerable<TransactionOutput>> GetTransactionOutput(CancellationToken cancellationToken, string transactionId)
         {
-            return  EpochQueries.GetEpochDelegationStatistics(this.GetConnection(), epochNumber);
+            return TransactionQueries.GetTransactionOutputs(this.GetConnection(), cancellationToken, transactionId);
         }
 
-        public Task<EpochStatistics> GetEpochCirculationStatistics(uint epochNumber)
+        public Task<IEnumerable<BlockDetail>> GetEpochBlocks(CancellationToken cancellationToken, uint epochNumber)
         {
-            return EpochQueries.GetEpochCirculationStatistics(this.GetConnection(), epochNumber);
+            return BlockQueries.GetEpochBlocks(this.GetConnection(), cancellationToken, epochNumber);
+        }
+
+        public Task<EpochStatistics> GetEpochDelegationStatistics(CancellationToken cancellationToken, uint epochNumber)
+        {
+            return  EpochQueries.GetEpochDelegationStatistics(this.GetConnection(), cancellationToken, epochNumber);
+        }
+
+        public Task<EpochStatistics> GetEpochCirculationStatistics(CancellationToken cancellationToken, uint epochNumber)
+        {
+            return EpochQueries.GetEpochCirculationStatistics(this.GetConnection(), cancellationToken, epochNumber);
         }
     }
 }

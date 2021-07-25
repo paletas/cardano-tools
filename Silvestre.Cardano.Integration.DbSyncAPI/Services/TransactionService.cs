@@ -20,7 +20,7 @@ namespace Silvestre.Cardano.Integration.DbSyncAPI.Services
 
         public override async Task<GetTransactionDetailsResponse> GetTransactionDetails(GetTransactionDetailsRequest request, ServerCallContext context)
         {
-            var transactionOutputs = await _databaseProxy.GetTransactionOutput(request.TransactionHashId).ConfigureAwait(false);
+            var transactionOutputs = await _databaseProxy.GetTransactionOutput(context.CancellationToken, request.TransactionHashId).ConfigureAwait(false);
             if (transactionOutputs.Any() == false) return new GetTransactionDetailsResponse();
 
             var transactionDetails = transactionOutputs.First();
