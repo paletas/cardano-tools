@@ -1,9 +1,5 @@
 ﻿using Grpc.Core;
-using Microsoft.Extensions.Logging;
 using Silvestre.Cardano.Integration.DbSync.Services;
-using System.Threading.Tasks;
-using System.Linq;
-using System;
 
 namespace Silvestre.Cardano.Integration.DbSyncAPI.Services
 {
@@ -32,7 +28,7 @@ namespace Silvestre.Cardano.Integration.DbSyncAPI.Services
                 FixedCost = stakePool.FixedCost,
                 Delegation = stakePool.Delegation,
 
-                MetadataUrl = stakePool.MetadataUrl,
+                MetadataUrl = stakePool.MetadataUrl ?? string.Empty,
                 ActiveSinceEpoch = stakePool.ActiveSinceEpochNumber
             }));
 
@@ -53,7 +49,7 @@ namespace Silvestre.Cardano.Integration.DbSyncAPI.Services
                 FixedCost = stakePool.FixedCost,
                 Delegation = stakePool.Delegation,
 
-                MetadataUrl = stakePool.MetadataUrl,
+                MetadataUrl = stakePool.MetadataUrl ?? string.Empty,
                 ActiveSinceEpoch = stakePool.ActiveSinceEpochNumber
             }));
 
@@ -77,7 +73,7 @@ namespace Silvestre.Cardano.Integration.DbSyncAPI.Services
                     FixedCost = stakePool.FixedCost,
                     Delegation = stakePool.Delegation,
 
-                    MetadataUrl = stakePool.MetadataUrl,
+                    MetadataUrl = stakePool.MetadataUrl ?? string.Empty,
                     ActiveSinceEpoch = stakePool.ActiveSinceEpochNumber
                 };
             }

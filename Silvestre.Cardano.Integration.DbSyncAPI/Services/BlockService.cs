@@ -1,10 +1,6 @@
 ﻿using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
-using Microsoft.Extensions.Logging;
 using Silvestre.Cardano.Integration.DbSync.Services;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Silvestre.Cardano.Integration.DbSyncAPI.Services
 {
@@ -63,7 +59,7 @@ namespace Silvestre.Cardano.Integration.DbSyncAPI.Services
                     });
                 }
 
-                await Task.Delay((int) request.DelayUpdatesMillisecond);
+                await Task.Delay((int)request.DelayUpdatesMillisecond);
             }
         }
 

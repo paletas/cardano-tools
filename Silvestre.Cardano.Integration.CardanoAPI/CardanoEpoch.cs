@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Silvestre.Cardano.Integration.CardanoAPI
+﻿namespace Silvestre.Cardano.Integration.CardanoAPI
 {
     public class CardanoEpoch
     {
@@ -36,7 +34,7 @@ namespace Silvestre.Cardano.Integration.CardanoAPI
         public uint MaxSlots { get; set; }
     }
 
-    public  class CurrentCardanoEpoch : CardanoEpoch
+    public class CurrentCardanoEpoch : CardanoEpoch
     {
         public CurrentCardanoEpoch(CardanoEra era, ulong number, uint transactionCount, uint blockCount, CardanoAsset transactions, CardanoAsset fees, DateTime from, DateTime to, uint currentSlot)
             : base(era, number, transactionCount, blockCount, transactions, fees, from, to)

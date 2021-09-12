@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Silvestre.Cardano.Integration.CardanoAPI;
 using Silvestre.Cardano.WebApp.API.Maps;
-using System.Threading.Tasks;
 
 namespace Silvestre.Cardano.WebApp.API
 {

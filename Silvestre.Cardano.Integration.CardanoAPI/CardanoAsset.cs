@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Silvestre.Cardano.Integration.CardanoAPI
+﻿namespace Silvestre.Cardano.Integration.CardanoAPI
 {
     public class CardanoAsset
     {
@@ -16,7 +14,7 @@ namespace Silvestre.Cardano.Integration.CardanoAPI
 
         internal CardanoAsset(ulong quantity, int decimalUnit, string unit)
         {
-            this.Quantity = quantity / (decimal) Math.Pow(10, decimalUnit);
+            this.Quantity = quantity / (decimal)Math.Pow(10, decimalUnit);
             this.Unit = unit;
         }
 

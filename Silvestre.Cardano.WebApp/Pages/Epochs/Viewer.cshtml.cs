@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Silvestre.Cardano.Integration.CardanoAPI;
-using System.Threading.Tasks;
 
 namespace Silvestre.Cardano.WebApp.Pages.Epochs
 {

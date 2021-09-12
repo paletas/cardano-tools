@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Silvestre.Cardano.Integration.CardanoAPI
+﻿namespace Silvestre.Cardano.Integration.CardanoAPI
 {
     public class CardanoStakePool : CardanoStakePoolMetadata
     {
@@ -14,6 +12,6 @@ namespace Silvestre.Cardano.Integration.CardanoAPI
 
         public CardanoAsset Pledge { get; internal set; }
 
-        public  CardanoAsset Delegation { get; internal set; }
+        public CardanoAsset Delegation { get; internal set; }
     }
 }

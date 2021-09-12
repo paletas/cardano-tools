@@ -1,9 +1,6 @@
 ﻿using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
-using Microsoft.Extensions.Logging;
 using Silvestre.Cardano.Integration.DbSync.Services;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Silvestre.Cardano.Integration.DbSyncAPI.Services
 {

@@ -1,9 +1,4 @@
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SignalR;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Silvestre.Cardano.Integration.CardanoAPI;
 using Silvestre.Cardano.WebApp.SignalR;
 using Silvestre.Cardano.WebApp.Workers;

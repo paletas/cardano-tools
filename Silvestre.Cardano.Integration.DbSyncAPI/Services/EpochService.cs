@@ -1,8 +1,6 @@
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
-using Microsoft.Extensions.Logging;
 using Silvestre.Cardano.Integration.DbSync.Services;
-using System.Threading.Tasks;
 
 namespace Silvestre.Cardano.Integration.DbSyncAPI.Services
 {
@@ -20,6 +18,9 @@ namespace Silvestre.Cardano.Integration.DbSyncAPI.Services
         public override async Task<CurrentEpochReply> GetCurrentEpoch(CurrentEpochRequest request, ServerCallContext context)
         {
             var currentEpoch = await this._databaseProxy.GetCurrentEpoch(context.CancellationToken).ConfigureAwait(false);
+
+            if (currentEpoch == null)
+                throw new RpcException(new Status(StatusCode.NotFound, "Epoch not found"));
 
             return new CurrentEpochReply
             {

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Silvestre.Cardano.Integration.CardanoAPI
+﻿namespace Silvestre.Cardano.Integration.CardanoAPI
 {
     public class CardanoTransaction
     {

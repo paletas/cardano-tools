@@ -1,9 +1,6 @@
 ﻿using Silvestre.Cardano.Integration.DbSyncAPI.Database.Model;
 using Silvestre.Cardano.Integration.DbSyncAPI.Database.Queries;
-using System.Collections.Generic;
 using System.Data.Common;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Silvestre.Cardano.Integration.DbSyncAPI
 {
@@ -77,7 +74,7 @@ namespace Silvestre.Cardano.Integration.DbSyncAPI
 
         public Task<EpochStatistics> GetEpochDelegationStatistics(CancellationToken cancellationToken, uint epochNumber)
         {
-            return  EpochQueries.GetEpochDelegationStatistics(this.GetConnection(), cancellationToken, epochNumber);
+            return EpochQueries.GetEpochDelegationStatistics(this.GetConnection(), cancellationToken, epochNumber);
         }
 
         public Task<EpochStatistics> GetEpochCirculationStatistics(CancellationToken cancellationToken, uint epochNumber)

@@ -1,10 +1,5 @@
 ﻿using Silvestre.Cardano.Integration.CardanoAPI.Services.DbSync;
 using Silvestre.Cardano.Integration.CardanoAPI.Services.Metadata;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Silvestre.Cardano.Integration.CardanoAPI
 {
@@ -81,7 +76,7 @@ namespace Silvestre.Cardano.Integration.CardanoAPI
             {
                 stakePools.Add(new CardanoStakePool
                 {
-                    MetadataUrl = new Uri(stakePool.MetadataUrl),
+                    MetadataUrl = ToUrl(stakePool.MetadataUrl),
                     PoolAddress = new CardanoAddress(stakePool.PoolAddress, CardanoAddress.AddressKindEnum.StakePool),
                     Margin = new CardanoAsset((decimal)stakePool.Margin, CardanoAsset.PERCENTAGE_UNIT),
                     Maintenance = new CardanoAsset(stakePool.FixedCost, CardanoAsset.ADA_DECIMALPOINTER, CardanoAsset.ADA_UNIT),
@@ -118,7 +113,7 @@ namespace Silvestre.Cardano.Integration.CardanoAPI
                 Name = metadata?.Name,
                 Description = metadata?.Description,
                 Website = metadata?.Homepage,
-                MetadataUrl = new Uri(stakePool.MetadataUrl),
+                MetadataUrl = ToUrl(stakePool.MetadataUrl),
 
                 PoolAddress = new CardanoAddress(stakePool.PoolAddress, CardanoAddress.AddressKindEnum.StakePool),
                 Margin = new CardanoAsset((decimal)stakePool.Margin, CardanoAsset.PERCENTAGE_UNIT),
@@ -200,5 +195,12 @@ namespace Silvestre.Cardano.Integration.CardanoAPI
         {
             return await _dbSyncAPI.GetEpochSupplyStatistics(epochNumber).ConfigureAwait(false);
         }
+
+        private static Uri ToUrl(string url) => url switch
+        {
+            null => null,
+            "" => null,
+            _ => new Uri(url)
+        };
     }
 }

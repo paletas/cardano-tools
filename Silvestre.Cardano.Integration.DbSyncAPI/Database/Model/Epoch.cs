@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Silvestre.Cardano.Integration.DbSyncAPI.Database.Model
+﻿namespace Silvestre.Cardano.Integration.DbSyncAPI.Database.Model
 {
     internal class Epoch
     {

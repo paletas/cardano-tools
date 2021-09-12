@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Silvestre.Cardano.Integration.CardanoAPI
+﻿namespace Silvestre.Cardano.Integration.CardanoAPI
 {
     public class CardanoBlock
     {

@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Silvestre.Cardano.Integration.CardanoAPI;
 using Silvestre.Cardano.WebApp.API.ServiceModel.Block;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Silvestre.Cardano.WebApp.API
 {

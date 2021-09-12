@@ -1,8 +1,5 @@
 ﻿using Silvestre.Cardano.Integration.CardanoAPI.Services.CardanoWalletAPI.ServiceModel.StakePools;
-using System;
-using System.Net.Http;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace Silvestre.Cardano.Integration.CardanoAPI.Services.Metadata
 {

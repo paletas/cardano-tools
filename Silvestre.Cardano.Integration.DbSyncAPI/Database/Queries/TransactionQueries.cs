@@ -1,9 +1,6 @@
 ﻿using Dapper;
 using Silvestre.Cardano.Integration.DbSyncAPI.Database.Model;
-using System.Collections.Generic;
 using System.Data.Common;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Silvestre.Cardano.Integration.DbSyncAPI.Database.Queries
 {
@@ -30,8 +27,8 @@ namespace Silvestre.Cardano.Integration.DbSyncAPI.Database.Queries
 						ON tx.id = withdrawal.tx_id
 				WHERE tx.hash = decode(@TransactionId, 'hex')";
 
-			var transactionCommand = new CommandDefinition(QueryString, new { TransactionId = transactionId }, commandType: System.Data.CommandType.Text, cancellationToken: cancellationToken);
-			var transactionData = await sqlConnection.QueryAsync<TransactionOutput>(transactionCommand).ConfigureAwait(false);
+            var transactionCommand = new CommandDefinition(QueryString, new { TransactionId = transactionId }, commandType: System.Data.CommandType.Text, cancellationToken: cancellationToken);
+            var transactionData = await sqlConnection.QueryAsync<TransactionOutput>(transactionCommand).ConfigureAwait(false);
 
             foreach (var transaction in transactionData)
             {

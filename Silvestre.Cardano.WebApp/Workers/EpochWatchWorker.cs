@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNetCore.SignalR;
-using Microsoft.Extensions.Hosting;
 using Silvestre.Cardano.Integration.CardanoAPI;
 using Silvestre.Cardano.WebApp.SignalR;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Silvestre.Cardano.WebApp.Workers
 {

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text;
+﻿using System.Text;
 
 namespace Silvestre.Cardano.Integration.DbSyncAPI.Database.Model
 {

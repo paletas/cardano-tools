@@ -1,19 +1,23 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Silvestre.Cardano.Integration.DbSyncAPI.Database;
+﻿using Silvestre.Cardano.Integration.DbSyncAPI.Database;
 using Silvestre.Cardano.Integration.DbSyncAPI.Services;
 
 namespace Silvestre.Cardano.Integration.DbSyncAPI
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IWebHostEnvironment environment)
         {
-            Configuration = configuration;
+            var configurationBuilder = new ConfigurationBuilder()
+                .SetBasePath(environment.ContentRootPath)
+                .AddJsonFile("appsettings.json", true, true)
+                .AddJsonFile($"appsettings.{environment.EnvironmentName}.json", true, true);
+
+            //if (environment.IsDevelopment())
+            //{
+            //    configurationBuilder.AddJsonFile($"appsettings.Secrets.json", true, true);
+            //}
+
+            Configuration = configurationBuilder.Build();
         }
 
         public IConfiguration Configuration { get; }

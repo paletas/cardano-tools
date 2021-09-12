@@ -1,11 +1,6 @@
 ﻿using Dapper;
 using Silvestre.Cardano.Integration.DbSyncAPI.Database.Model;
-using System;
-using System.Collections.Generic;
 using System.Data.Common;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Silvestre.Cardano.Integration.DbSyncAPI.Database.Queries
 {
@@ -37,10 +32,10 @@ namespace Silvestre.Cardano.Integration.DbSyncAPI.Database.Queries
                 @"SELECT pool_hash.id PoolId, pool_hash.view AS PoolAddress,
 					pool_update.pledge AS Pledge, pool_update.active_epoch_no AS ActiveSinceEpochNumber,
 					pool_update.margin AS Margin, pool_update.fixed_cost AS FixedCost,
-					pool_meta_data.url AS MetadataUrl
+					pool_metadata_ref.url AS MetadataUrl
 				FROM public.pool_hash
 					INNER JOIN public.pool_update ON pool_hash.id = pool_update.hash_id
-					LEFT JOIN public.pool_meta_data ON pool_update.registered_tx_id = pool_meta_data.registered_tx_id
+	                LEFT JOIN public.pool_metadata_ref ON pool_update.registered_tx_id = pool_metadata_ref.registered_tx_id
 				WHERE pool_hash.id = @PoolId";
 
             const string StakeQueryString = @"
@@ -68,7 +63,7 @@ namespace Silvestre.Cardano.Integration.DbSyncAPI.Database.Queries
                     stakePool.PoolAddress = poolUpdate.PoolAddress;
 
                     if (stakePool.ActiveSinceEpochNumber == default)
-                        stakePool.ActiveSinceEpochNumber = (ulong) poolUpdate.ActiveSinceEpochNumber;
+                        stakePool.ActiveSinceEpochNumber = (ulong)poolUpdate.ActiveSinceEpochNumber;
 
                     stakePool.Pledge = (ulong)poolUpdate.Pledge;
                     stakePool.Margin = poolUpdate.Margin;
@@ -81,7 +76,7 @@ namespace Silvestre.Cardano.Integration.DbSyncAPI.Database.Queries
                 stakePool.Delegation = delegation;
             };
 
-            return ((ulong) (stakePoolsSearch.FirstOrDefault()?.TotalStakePools ?? 0), stakePools);
+            return ((ulong)(stakePoolsSearch.FirstOrDefault()?.TotalStakePools ?? 0), stakePools);
         }
 
         public static async Task<StakePool> GetStakePool(this DbConnection dbConnection, CancellationToken cancellationToken, string poolAddress, uint? epochNo = null)
@@ -94,13 +89,13 @@ namespace Silvestre.Cardano.Integration.DbSyncAPI.Database.Queries
 
             const string StakePoolUpdateDetails =
                 @"SELECT pool_hash.id PoolId, pool_hash.view AS PoolAddress,
-					pool_update.pledge AS Pledge, pool_update.active_epoch_no AS ActiveSinceEpochNumber,
-					pool_update.margin AS Margin, pool_update.fixed_cost AS FixedCost,
-					pool_meta_data.url AS MetadataUrl
-				FROM public.pool_hash
-					INNER JOIN public.pool_update ON pool_hash.id = pool_update.hash_id
-					LEFT JOIN public.pool_meta_data ON pool_update.registered_tx_id = pool_meta_data.registered_tx_id
-				WHERE pool_hash.view = @PoolAddress";
+	                pool_update.pledge AS Pledge, pool_update.active_epoch_no AS ActiveSinceEpochNumber,
+	                pool_update.margin AS Margin, pool_update.fixed_cost AS FixedCost,
+	                pool_metadata_ref.url AS MetadataUrl
+                FROM public.pool_hash
+	                INNER JOIN public.pool_update ON pool_hash.id = pool_update.hash_id
+	                LEFT JOIN public.pool_metadata_ref ON pool_update.registered_tx_id = pool_metadata_ref.registered_tx_id
+                WHERE pool_hash.view =  @PoolAddress";
 
             const string StakeQueryString = @"
 				SELECT SUM(amount) TotalStake
@@ -119,7 +114,7 @@ namespace Silvestre.Cardano.Integration.DbSyncAPI.Database.Queries
                 stakePool.PoolId = poolUpdate.PoolId;
 
                 if (stakePool.ActiveSinceEpochNumber == default)
-                    stakePool.ActiveSinceEpochNumber = (ulong) poolUpdate.ActiveSinceEpochNumber;
+                    stakePool.ActiveSinceEpochNumber = (ulong)poolUpdate.ActiveSinceEpochNumber;
 
                 stakePool.Pledge = (ulong)poolUpdate.Pledge;
                 stakePool.Margin = poolUpdate.Margin;

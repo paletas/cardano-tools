@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Silvestre.Cardano.Integration.CardanoAPI;
 using Silvestre.Cardano.WebApp.API.ServiceModel.Epoch;
-using System.Threading.Tasks;
 
 namespace Silvestre.Cardano.WebApp.API
 {

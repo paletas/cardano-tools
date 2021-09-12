@@ -1,6 +1,5 @@
 ﻿using Silvestre.Cardano.Integration.CardanoAPI;
 using Silvestre.Cardano.WebApp.API.ServiceModel.Transactions;
-using System.Linq;
 
 namespace Silvestre.Cardano.WebApp.API.Maps
 {
@@ -34,7 +33,7 @@ namespace Silvestre.Cardano.WebApp.API.Maps
         {
             return new TransactionOutput
             {
-                AddressTo =  cardanoTransactionOutput.AddressTo,
+                AddressTo = cardanoTransactionOutput.AddressTo,
                 Amount = cardanoTransactionOutput.Output.Quantity
             };
         }

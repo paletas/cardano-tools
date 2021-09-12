@@ -2,7 +2,7 @@
 {
     internal class BlockDetail : Block
     {
-        public ulong  TotalFees { get; set; }
+        public ulong TotalFees { get; set; }
 
         public decimal TotalOutSum { get; set; }
     }

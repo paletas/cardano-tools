@@ -1,7 +1,5 @@
 ﻿using Dapper;
-using System;
 using System.Data.Common;
-using System.Threading.Tasks;
 
 namespace Silvestre.Cardano.Integration.DbSyncAPI.Database.Queries
 {
@@ -37,14 +35,7 @@ namespace Silvestre.Cardano.Integration.DbSyncAPI.Database.Queries
         public static async Task UpgradeDatabase(this DbConnection dbConnection)
         {
             const string UpgradeIndexesQuery =
-                @"DROP INDEX public.idx_reward_block_id;
-                CREATE INDEX idx_reward_block_id
-                    ON public.reward USING btree
-                    (block_id ASC NULLS LAST)
-                    INCLUDE(amount)
-                    TABLESPACE pg_default;
-
-                DROP INDEX public.idx_tx_in_tx_out_id;
+                @"DROP INDEX IF EXISTS public.idx_tx_in_tx_out_id;
                 CREATE INDEX idx_tx_in_tx_out_id
                     ON public.tx_in USING btree
                     (tx_out_id ASC NULLS LAST)

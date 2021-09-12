@@ -365,3 +365,4 @@ FodyWeavers.xsd
 
 # Cardano Silvestre
 /.ssh
+appsettings.Secrets.json

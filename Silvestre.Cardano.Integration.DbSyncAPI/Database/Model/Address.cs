@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text;
+﻿using System.Text;
 
 namespace Silvestre.Cardano.Integration.DbSyncAPI.Database.Model
 {
@@ -12,7 +11,7 @@ namespace Silvestre.Cardano.Integration.DbSyncAPI.Database.Model
             this.Value = address;
         }
 
-        public Address(string address) : this (Encoding.ASCII.GetBytes(address))
+        public Address(string address) : this(Encoding.ASCII.GetBytes(address))
         { }
 
         public byte[] Value { get; set; }

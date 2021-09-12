@@ -1,5 +1,4 @@
 ﻿using Silvestre.Cardano.WebApp.SignalR.ServiceModel;
-using System.Threading.Tasks;
 
 namespace Silvestre.Cardano.WebApp.SignalR
 {

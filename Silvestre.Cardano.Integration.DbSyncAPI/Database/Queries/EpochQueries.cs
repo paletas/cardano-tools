@@ -1,8 +1,6 @@
 ﻿using Dapper;
 using Silvestre.Cardano.Integration.DbSyncAPI.Database.Model;
 using System.Data.Common;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Silvestre.Cardano.Integration.DbSyncAPI.Database.Queries
 {
@@ -16,8 +14,8 @@ namespace Silvestre.Cardano.Integration.DbSyncAPI.Database.Queries
                 ORDER BY no DESC
                 LIMIT 1";
 
-			var epochCommand = new CommandDefinition(QueryString, commandType: System.Data.CommandType.Text, cancellationToken: cancellationToken);
-			var epochData = await sqlConnection.QuerySingleAsync<Epoch>(epochCommand).ConfigureAwait(false);
+            var epochCommand = new CommandDefinition(QueryString, commandType: System.Data.CommandType.Text, cancellationToken: cancellationToken);
+            var epochData = await sqlConnection.QuerySingleAsync<Epoch>(epochCommand).ConfigureAwait(false);
             epochData.StartTime = epochData.StartTime.ToUniversalTime();
             epochData.EndTime = epochData.EndTime.ToUniversalTime();
 
@@ -31,11 +29,11 @@ namespace Silvestre.Cardano.Integration.DbSyncAPI.Database.Queries
                 FROM public.epoch
                 WHERE no = @EpochNumber";
 
-			var epochCommand = new CommandDefinition(QueryString, new { EpochNumber = (long)epochNumber }, commandType: System.Data.CommandType.Text, cancellationToken: cancellationToken);
-			var epochData = await sqlConnection.QuerySingleOrDefaultAsync<Epoch>(QueryString, new { EpochNumber = (long) epochNumber }, commandType: System.Data.CommandType.Text).ConfigureAwait(false);
-			if (epochData == default(Epoch)) return null;
+            var epochCommand = new CommandDefinition(QueryString, new { EpochNumber = (long)epochNumber }, commandType: System.Data.CommandType.Text, cancellationToken: cancellationToken);
+            var epochData = await sqlConnection.QuerySingleOrDefaultAsync<Epoch>(QueryString, new { EpochNumber = (long)epochNumber }, commandType: System.Data.CommandType.Text).ConfigureAwait(false);
+            if (epochData == default(Epoch)) return null;
 
-			epochData.StartTime = epochData.StartTime.ToUniversalTime();
+            epochData.StartTime = epochData.StartTime.ToUniversalTime();
             epochData.EndTime = epochData.EndTime.ToUniversalTime();
 
             return epochData;
@@ -47,10 +45,9 @@ namespace Silvestre.Cardano.Integration.DbSyncAPI.Database.Queries
 				@"SELECT epoch.no AS EpochNumber, delegation.delegated_total AS TotalDelegations, stakepools.total AS TotalStakePools, orphanedrewards.total AS OrphanedRewards, rewards.total AS Rewards
 				FROM public.epoch 
 					INNER JOIN LATERAL (
-						SELECT COUNT(block_id) delegated_total
-						FROM public.block
-							INNER JOIN public.epoch_stake ON block.id = epoch_stake.block_id
-						WHERE epoch.no = block.epoch_no
+						SELECT COUNT(id) delegated_total
+						FROM public.epoch_stake
+						WHERE epoch.no = epoch_stake.epoch_no
 					) delegation ON TRUE
 					INNER JOIN LATERAL (
 						SELECT COUNT(DISTINCT pool_update.hash_id) total
@@ -60,32 +57,29 @@ namespace Silvestre.Cardano.Integration.DbSyncAPI.Database.Queries
 					) stakepools ON TRUE
 					INNER JOIN LATERAL (
 						SELECT SUM(reward.amount) total
-						FROM public.block
-							INNER JOIN public.reward ON block.id = reward.block_id
-						WHERE epoch.no = block.epoch_no
+						FROM public.reward
+						WHERE epoch.no = reward.earned_epoch
 					) rewards ON TRUE
 					INNER JOIN LATERAL (
 						SELECT SUM(orphaned_reward.amount) total
-						FROM public.block
-							INNER JOIN public.orphaned_reward ON block.id = orphaned_reward.block_id
-						WHERE epoch.no = block.epoch_no
+						FROM public.orphaned_reward
+						WHERE epoch.no = orphaned_reward.epoch_no
 					) orphanedrewards ON TRUE
 				WHERE epoch.no = @EpochNumber";
 
-			var epochCommand = new CommandDefinition(QueryString, new { EpochNumber = (long)epochNumber }, commandTimeout: 180, commandType: System.Data.CommandType.Text, cancellationToken: cancellationToken);
-			return await sqlConnection.QuerySingleAsync<EpochStatistics>(epochCommand).ConfigureAwait(false);
-		}
+            var epochCommand = new CommandDefinition(QueryString, new { EpochNumber = (long)epochNumber }, commandTimeout: 180, commandType: System.Data.CommandType.Text, cancellationToken: cancellationToken);
+            return await sqlConnection.QuerySingleAsync<EpochStatistics>(epochCommand).ConfigureAwait(false);
+        }
 
-		public static async Task<EpochStatistics> GetEpochCirculationStatistics(this DbConnection sqlConnection, CancellationToken cancellationToken, uint epochNumber)
-		{
-			const string QueryString =
+        public static async Task<EpochStatistics> GetEpochCirculationStatistics(this DbConnection sqlConnection, CancellationToken cancellationToken, uint epochNumber)
+        {
+            const string QueryString =
 				@"SELECT epoch.no AS EpochNumber, delegation.delegated_supply AS DelegatedSupply, onchain.current_supply AS CirculatingSupply
 				FROM public.epoch 
 					INNER JOIN LATERAL (
 						SELECT SUM(amount) delegated_supply
-						FROM public.block
-							INNER JOIN public.epoch_stake ON block.id = epoch_stake.block_id
-						WHERE block.epoch_no = epoch.no
+						FROM public.epoch_stake
+						WHERE epoch_stake.epoch_no = epoch.no
 					) delegation ON TRUE
 					INNER JOIN LATERAL (
 						SELECT MAX(tx.id) tx_id
@@ -105,8 +99,8 @@ namespace Silvestre.Cardano.Integration.DbSyncAPI.Database.Queries
 					) onchain ON TRUE
 				WHERE epoch.no = @EpochNumber";
 
-			var epochCommand = new CommandDefinition(QueryString, new { EpochNumber = (long)epochNumber }, commandTimeout: 180, commandType: System.Data.CommandType.Text, cancellationToken: cancellationToken);
-			return await sqlConnection.QuerySingleAsync<EpochStatistics>(epochCommand).ConfigureAwait(false);
-		}
-	}
+            var epochCommand = new CommandDefinition(QueryString, new { EpochNumber = (long)epochNumber }, commandTimeout: 180, commandType: System.Data.CommandType.Text, cancellationToken: cancellationToken);
+            return await sqlConnection.QuerySingleAsync<EpochStatistics>(epochCommand).ConfigureAwait(false);
+        }
+    }
 }
