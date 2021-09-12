@@ -10,7 +10,8 @@ namespace Silvestre.Cardano.Integration.DbSyncAPI
             var configurationBuilder = new ConfigurationBuilder()
                 .SetBasePath(environment.ContentRootPath)
                 .AddJsonFile("appsettings.json", true, true)
-                .AddJsonFile($"appsettings.{environment.EnvironmentName}.json", true, true);
+                .AddJsonFile($"appsettings.{environment.EnvironmentName}.json", true, true)
+                .AddEnvironmentVariables();
 
             //if (environment.IsDevelopment())
             //{
