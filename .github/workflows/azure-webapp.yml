@@ -19,10 +19,11 @@ jobs:
       uses: actions/checkout@master
 
 
-    - name: Set up .NET Core
+    - name: Set up .NET
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: '5.0.x'
+        dotnet-version: '6.0.x'
+        include-prerelease: true
 
     - name: Build with dotnet
       run: dotnet build Silvestre.Cardano.WebApp --configuration Release
