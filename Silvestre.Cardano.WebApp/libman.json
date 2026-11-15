@@ -7,7 +7,7 @@
       "destination": "wwwroot/lib/alpinejs/"
     },
     {
-      "library": "moment.js@2.29.1",
+      "library": "moment.js@2.31.0",
       "destination": "wwwroot/lib/moment.js/"
     },
     {
@@ -15,11 +15,11 @@
       "destination": "wwwroot/lib/microsoft-signalr/"
     },
     {
-      "library": "require.js@2.3.6",
+      "library": "require.js@2.3.8",
       "destination": "wwwroot/lib/require.js/"
     },
     {
-      "library": "apexcharts@3.26.3",
+      "library": "apexcharts@3.54.1",
       "destination": "wwwroot/lib/apexcharts/"
     },
     {
