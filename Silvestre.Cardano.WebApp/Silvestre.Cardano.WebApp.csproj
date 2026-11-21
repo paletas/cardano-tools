@@ -10,6 +10,7 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
     <CopyRefAssembliesToPublishDirectory>false</CopyRefAssembliesToPublishDirectory>
     <UserSecretsId>65fab9d0-42de-4f97-a138-795d33463834</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>

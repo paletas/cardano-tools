@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
     <StartupObject>Silvestre.Cardano.Integration.DbSyncAPI.Program</StartupObject>
     <Nullable>warnings</Nullable>
   </PropertyGroup>
@@ -33,7 +34,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Npgsql" Version="5.0.7" />
+    <PackageReference Include="Npgsql" Version="5.0.18" />
   </ItemGroup>
 
 </Project>
