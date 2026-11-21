@@ -19,8 +19,9 @@
       "destination": "wwwroot/lib/require.js/"
     },
     {
-      "library": "apexcharts@3.54.1",
-      "destination": "wwwroot/lib/apexcharts/"
+      "library": "apexcharts@8.9.1",
+      "destination": "wwwroot/lib/apexcharts/",
+      "files": [ "apexcharts.js", "apexcharts.min.js", "apexcharts.css", "apexcharts.min.css", "locales/*.json" ]
     },
     {
       "library": "lodash.js@4.17.21",

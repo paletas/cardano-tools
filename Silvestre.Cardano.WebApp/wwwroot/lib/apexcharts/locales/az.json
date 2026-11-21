@@ -1,0 +1,67 @@
+{
+  "name": "az",
+  "options": {
+    "months": [
+      "Yanvar",
+      "Fevral",
+      "Mart",
+      "Aprel",
+      "May",
+      "İyun",
+      "İyul",
+      "Avqust",
+      "Sentyabr",
+      "Oktyabr",
+      "Noyabr",
+      "Dekabr"
+    ],
+    "shortMonths": [
+      "Yan",
+      "Fev",
+      "Mar",
+      "Apr",
+      "May",
+      "İyn",
+      "İyl",
+      "Avq",
+      "Sen",
+      "Okt",
+      "Noy",
+      "Dek"
+    ],
+    "days": [
+      "Bazar",
+      "Bazar ertəsi",
+      "Çərşənbə axşamı",
+      "Çərşənbə",
+      "Cümə axşamı",
+      "Cümə",
+      "Şənbə"
+    ],
+    "shortDays": ["Baz", "BzE", "ÇAx", "Çər", "CAx", "Cüm", "Şən"],
+    "toolbar": {
+      "exportToSVG": "SVG Yüklə",
+      "exportToPNG": "PNG Yüklə",
+      "exportToCSV": "CSV Yüklə",
+      "menu": "Menyu",
+      "selection": "Seçim",
+      "selectionZoom": "Seçimi Yaxınlaşdır",
+      "zoomIn": "Yaxınlaşdır",
+      "zoomOut": "Uzaqlaşdır",
+      "pan": "Sürüşdürmə",
+      "reset": "Yaxınlaşdırmanı Sıfırla",
+      "measure": "Ölçmə",
+      "wheelZoomHint": "Yaxınlaşdırmaq üçün {key} + sürüşdürmədən istifadə edin"
+    },
+    "a11y": {
+      "legendItem": "{name}, {state}. Dəyişmək üçün Enter və ya Boşluq düyməsini basın.",
+      "visible": "görünür",
+      "hidden": "gizlədilib",
+      "zoomedIn": "Yaxınlaşdırıldı",
+      "zoomedOut": "Uzaqlaşdırıldı",
+      "zoomReset": "Miqyas sıfırlandı",
+      "pannedLeft": "Sola sürüşdürüldü",
+      "pannedRight": "Sağa sürüşdürüldü"
+    }
+  }
+}
