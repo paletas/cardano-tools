@@ -12,7 +12,6 @@ gulp.task('css', () => {
 
     return gulp.src('./Content/layout.css')
         .pipe(postcss([
-            require('precss'),
             require('tailwindcss'),
             require('autoprefixer')
         ]))
